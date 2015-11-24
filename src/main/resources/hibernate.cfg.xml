@@ -7,10 +7,14 @@
         <property name="connection.url">jdbc:postgresql://localhost:5432/postgres</property>
         <property name="connection.driver_class">org.postgresql.Driver</property>
         <property name="connection.username">postgres</property>
-        <property name="connection.password">admin</property>
+        <property name="connection.password">P@rlament1.02</property>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL94Dialect</property>
         <property name="hbm2ddl.auto">update</property>
 
         <mapping class="se.travappar.api.model.HelloWorld"/>
+        <mapping class="se.travappar.api.model.Event"/>
+        <mapping class="se.travappar.api.model.Track"/>
+        <mapping class="se.travappar.api.model.User"/>
+        <mapping class="se.travappar.api.model.Subscription"/>
     </session-factory>
 </hibernate-configuration>

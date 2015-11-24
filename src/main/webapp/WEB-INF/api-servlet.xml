@@ -32,7 +32,7 @@
         <property name="url"
                   value="jdbc:postgresql://localhost:5432/postgres" />
         <property name="username" value="postgres" />
-        <property name="password" value="admin" />
+        <property name="password" value="P@rlament1.02" />
     </bean>
 
     <bean id="sessionFactory"
