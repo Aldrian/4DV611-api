@@ -1,20 +1,43 @@
 package se.travappar.api.model;
 
+import javax.persistence.*;
+
+import org.hibernate.annotations.GenericGenerator;
 import java.io.Serializable;
 import java.util.Date;
 
+
+@Entity
+@Table(name = "Event")
 public class Event implements Serializable {
+
+    @Id
+    @GeneratedValue
+    @Column(name = "id", nullable = false, unique = true)
     Long id;
+    @Column(name = "date")
     Date date;
+    @Column(name = "eventName")
+    String eventName;
+    @Column(name = "highlight")
     String highlight;
+    @Column(name = "homeTeam")
     String homeTeam;
+    @Column(name = "offerImage")
     String offerImage;
+    @Column(name = "offer")
     String offer;
+    @Column (name = "track")
     Track track;
+    @Column(name = "trackList")
+    String trackList;
 
     public Event() {
-    }
 
+    }
+        @Id
+        @GeneratedValue(generator="increment")
+        @GenericGenerator(name="increment", strategy = "increment")
     public Long getId() {
         return id;
     }
@@ -23,6 +46,7 @@ public class Event implements Serializable {
         this.id = id;
     }
 
+    @Column(name = "date")
     public Date getDate() {
         return date;
     }
@@ -31,6 +55,7 @@ public class Event implements Serializable {
         this.date = date;
     }
 
+    @Column(name = "offerImage")
     public String getOfferImage() {
         return offerImage;
     }
@@ -39,6 +64,7 @@ public class Event implements Serializable {
         this.offerImage = offerImage;
     }
 
+    @Column(name = "offer")
     public String getOffer() {
         return offer;
     }
@@ -47,6 +73,7 @@ public class Event implements Serializable {
         this.offer = offer;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
     public Track getTrack() {
         return track;
     }
@@ -55,6 +82,7 @@ public class Event implements Serializable {
         this.track = track;
     }
 
+    @Column(name = "highlight")
     public String getHighlight() {
         return highlight;
     }
@@ -63,6 +91,7 @@ public class Event implements Serializable {
         this.highlight = highlight;
     }
 
+    @Column(name = "homeTeam")
     public String getHomeTeam() {
         return homeTeam;
     }

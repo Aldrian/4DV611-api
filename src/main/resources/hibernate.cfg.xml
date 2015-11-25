@@ -11,5 +11,9 @@
         <property name="hbm2ddl.auto">update</property>
 
         <mapping class="se.travappar.api.model.HelloWorld"/>
+        <mapping class="se.travappar.api.model.Event"/>
+        <mapping class="se.travappar.api.model.Track"/>
+        <mapping class="se.travappar.api.model.User"/>
+        <mapping class="se.travappar.api.model.Subscription"/>
     </session-factory>
 </hibernate-configuration>
