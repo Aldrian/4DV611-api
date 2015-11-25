@@ -3,6 +3,7 @@ package se.travappar.api.model;
 import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -11,33 +12,24 @@ import java.util.Date;
 @Table(name = "Event")
 public class Event implements Serializable {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "id", nullable = false, unique = true)
     Long id;
-    @Column(name = "date")
+    String name;
     Date date;
-    @Column(name = "eventName")
-    String eventName;
-    @Column(name = "highlight")
     String highlight;
-    @Column(name = "homeTeam")
     String homeTeam;
-    @Column(name = "offerImage")
     String offerImage;
-    @Column(name = "offer")
     String offer;
-    @Column (name = "track")
     Track track;
-    @Column(name = "trackList")
     String trackList;
 
     public Event() {
 
     }
-        @Id
-        @GeneratedValue(generator="increment")
-        @GenericGenerator(name="increment", strategy = "increment")
+
+    @Id
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
+    @Column(name = "id", nullable = false, unique = true)
     public Long getId() {
         return id;
     }
@@ -98,5 +90,23 @@ public class Event implements Serializable {
 
     public void setHomeTeam(String homeTeam) {
         this.homeTeam = homeTeam;
+    }
+
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String eventName) {
+        this.name = eventName;
+    }
+
+    @Column(name = "trackList")
+    public String getTrackList() {
+        return trackList;
+    }
+
+    public void setTrackList(String trackList) {
+        this.trackList = trackList;
     }
 }

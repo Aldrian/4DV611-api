@@ -10,22 +10,16 @@ import java.io.Serializable;
 @Table(name = "Track")
 public class Track implements Serializable {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "id", nullable = false, unique = true)
     Long id;
-    @Column(name = "name", length = 20)
     String name;
-    @Column(name = "address")
     String address;
 
     public Track() {
     }
 
     @Id
-    @GeneratedValue(generator="increment")
-    @GenericGenerator(name="increment", strategy = "increment")
-
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
     public Long getId() {
         return id;
     }

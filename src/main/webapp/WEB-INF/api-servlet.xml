@@ -8,7 +8,7 @@
     <mvc:annotation-driven/>
 
     <context:component-scan base-package="se.travappar.api"/>
-    <context:property-placeholder location="classpath:database.properties" />
+    <context:property-placeholder location="WEB-INF/database.properties" />
 
     <bean
             class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
