@@ -7,10 +7,12 @@ import org.hibernate.annotations.GenericGenerator;
 import java.io.Serializable;
 import java.util.Date;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 
 @Entity
 @Table(name = "Event")
-public class Event implements Serializable {
+public class Event implements CommonEntity {
 
     Long id;
     String name;
@@ -27,9 +29,8 @@ public class Event implements Serializable {
     }
 
     @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
-    @Column(name = "id", nullable = false, unique = true)
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     public Long getId() {
         return id;
     }
@@ -65,7 +66,7 @@ public class Event implements Serializable {
         this.offer = offer;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     public Track getTrack() {
         return track;
     }

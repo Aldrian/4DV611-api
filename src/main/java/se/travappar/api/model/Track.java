@@ -3,12 +3,13 @@ package se.travappar.api.model;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.io.Serializable;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 
 @Entity
 @Table(name = "Track")
-public class Track implements Serializable {
+public class Track implements CommonEntity {
 
     Long id;
     String name;
@@ -18,8 +19,8 @@ public class Track implements Serializable {
     }
 
     @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     public Long getId() {
         return id;
     }

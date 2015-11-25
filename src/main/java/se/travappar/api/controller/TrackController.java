@@ -4,44 +4,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import se.travappar.api.dal.impl.EventDAO;
-import se.travappar.api.model.Event;
+import se.travappar.api.dal.impl.TrackDAO;
+import se.travappar.api.model.Track;
 
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/events")
-public class EventController {
+@RequestMapping(value = "/tracks")
+public class TrackController {
 
     @Autowired
-    EventDAO eventDAO;
+    TrackDAO trackDAO;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Event> getEventList() {
-        return eventDAO.getList();
+    List<Track> getTrackList() {
+        return trackDAO.getList();
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Event> getEventListRoot() {
-        return getEventList();
+    List<Track> getTrackListRoot() {
+        return getTrackList();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public
     @ResponseBody
-    Event getEvent(@PathVariable long id) {
-        return eventDAO.get(id);
+    Track getTrack(@PathVariable long id) {
+        return trackDAO.get(id);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteEvent(@PathVariable long id) {
-        Event event = eventDAO.get(id);
-        eventDAO.delete(event);
+    public ResponseEntity deleteTrack(@PathVariable long id) {
+        Track track = trackDAO.get(id);
+        trackDAO.delete(track);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
@@ -51,8 +51,8 @@ public class EventController {
             MediaType.TEXT_PLAIN})
     public
     @ResponseBody
-    Event createEvent(@RequestBody Event event) {
-        return eventDAO.create(event);
+    Track createTrack(@RequestBody Track track) {
+        return trackDAO.create(track);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_FORM_URLENCODED,
@@ -61,7 +61,7 @@ public class EventController {
             MediaType.TEXT_PLAIN})
     public
     @ResponseBody
-    Event updateEvent(@RequestBody Event event) {
-        return eventDAO.update(event);
+    Track updateTrack(@RequestBody Track track) {
+        return trackDAO.update(track);
     }
 }

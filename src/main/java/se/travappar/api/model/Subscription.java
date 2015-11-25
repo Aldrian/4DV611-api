@@ -5,26 +5,26 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "Subscription")
-public class Subscription implements Serializable {
+public class Subscription implements CommonEntity {
 
-    User user;
+    Users user;
     Track track;
 
     public Subscription() {
     }
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    public User getUser() {
+    @ManyToOne(fetch = FetchType.EAGER)
+    public Users getUser() {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Users users) {
+        this.user = users;
     }
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     public Track getTrack() {
         return track;
     }

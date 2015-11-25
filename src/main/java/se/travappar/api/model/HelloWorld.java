@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "hello")
-public class HelloWorld implements Serializable{
+public class HelloWorld implements CommonEntity{
 
     @Column(name = "id", nullable = false, unique = true)
     Long id;
