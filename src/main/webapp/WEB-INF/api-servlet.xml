@@ -48,6 +48,9 @@
     <bean id="taskDao" class="se.travappar.api.dal.impl.TrackDAO">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
+    <bean id="userDao" class="se.travappar.api.dal.impl.UserDAO">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
 
     <tx:annotation-driven />
 
