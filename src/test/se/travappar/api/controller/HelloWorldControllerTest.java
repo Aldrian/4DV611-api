@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration({ "file:src/main/webapp/WEB-INF/api-servlet.xml",})
+@ContextConfiguration("file:src/main/webapp/WEB-INF/api-servlet.xml")
 public class HelloWorldControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -30,6 +30,11 @@ public class HelloWorldControllerTest {
     @Test
     public void testHelloWorld() throws Exception {
         mockMvc.perform(get("/helloworld")).andExpect(status().isOk());
+    }
+
+    @Test
+    public void helloworldCreate() throws Exception {
+        mockMvc.perform(get("/helloworldCreate")).andExpect(status().isOk());
     }
     
 }
