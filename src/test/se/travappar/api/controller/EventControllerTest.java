@@ -19,7 +19,6 @@ import org.springframework.web.context.WebApplicationContext;
 import se.travappar.api.dal.impl.EventDAO;
 import se.travappar.api.dal.impl.TrackDAO;
 import se.travappar.api.model.Event;
-import se.travappar.api.model.HelloWorld;
 import se.travappar.api.model.Track;
 
 import java.util.Date;
@@ -46,11 +45,8 @@ public class EventControllerTest {
     private int lastID;
 
     @Before
-    public void init() {
+    public void init() throws Exception {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-
-        HelloWorld helloWorld = new HelloWorld();
-        helloWorld.setField("Hello World!");
 
         Track track = new Track();
         track.setName("Test Track");
@@ -79,6 +75,12 @@ public class EventControllerTest {
 
         eventDAO.create(event);
         eventDAO.create(event1);
+
+        // get lastID in the DB
+        MvcResult result = mockMvc.perform(get("/events/")).andReturn();
+        String content = result.getResponse().getContentAsString();
+        JSONArray jsonArray = new JSONArray(content);
+        this.lastID = Integer.parseInt(jsonArray.getJSONObject(jsonArray.length() - 1).get("id").toString());
     }
 
 
@@ -92,12 +94,6 @@ public class EventControllerTest {
 
     @Test
     public void testEvent1() throws Exception {
-        // get lastID in the DB
-        MvcResult result = mockMvc.perform(get("/events/")).andReturn();
-        String content = result.getResponse().getContentAsString();
-        JSONArray jsonArray = new JSONArray(content);
-        this.lastID = Integer.parseInt(jsonArray.getJSONObject(jsonArray.length() - 1).get("id").toString());
-
         mockMvc.perform(get("/events/" + Integer.toString(this.lastID)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -108,12 +104,6 @@ public class EventControllerTest {
 
     @Test
     public void deleteEvent() throws Exception {
-        // get lastID in the DB
-        MvcResult result = mockMvc.perform(get("/events/")).andReturn();
-        String content = result.getResponse().getContentAsString();
-        JSONArray jsonArray = new JSONArray(content);
-        this.lastID = Integer.parseInt(jsonArray.getJSONObject(jsonArray.length() - 1).get("id").toString());
-
         mockMvc.perform(delete("/events/" + Integer.toString(this.lastID))).andExpect(status().isNoContent());
         mockMvc.perform(get("/events/" + Integer.toString(this.lastID)))
                 .andExpect(status().isOk())
