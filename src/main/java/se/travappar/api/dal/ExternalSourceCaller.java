@@ -17,6 +17,7 @@ import se.travappar.api.model.external.ExternalEvent;
 import se.travappar.api.model.external.ExternalRace;
 import se.travappar.api.model.external.ExternalStartList;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +36,8 @@ public class ExternalSourceCaller {
     @Autowired
     TrackDAO trackDAO;
 
+    Long norwayTrackId = 77L;
+
     OkHttpClient client = new OkHttpClient();
     ObjectMapper mapper = new ObjectMapper();
 
@@ -51,12 +54,16 @@ public class ExternalSourceCaller {
                 for (ExternalEvent.RaceEvent externalEvent : events) {
                     Track track = new Track();
                     track.setId(externalEvent.getTrackId());
-//                  TODO  track.setName(externalEvent.getTrack());
+                    if(norwayTrackId.equals(externalEvent.getTrackId())) {
+                        track.setName("Norway");
+                    } else {
+                        track.setName(externalEvent.getTrack());
+                    }
                     trackSet.add(track);
 
                     Event event = new Event();
                     event.setId(externalEvent.getId());
-                    event.setName(externalEvent.getTrack()); // TODO
+//                    event.setName(externalEvent.getTrack()); // TODO
                     event.setDate(externalEvent.getFirstracetime());
                     event.setTrack(track);
                     event.setRaceList(getRaceList(track, event));
@@ -138,5 +145,13 @@ public class ExternalSourceCaller {
 
     public void setTrackSet(Set<Track> trackSet) {
         this.trackSet = trackSet;
+    }
+
+    @PostConstruct
+    public void loadDataOnStartup() {
+        /*List<Event> eventList = requestEventList();
+        Set<Track> trackSet = getTrackSet();
+        trackDAO.saveList(trackSet);
+        eventDAO.saveList(eventList);*/
     }
 }
