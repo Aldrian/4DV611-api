@@ -2,7 +2,7 @@ package se.travappar.api.controller;
 
 import com.google.gson.Gson;
 import org.hamcrest.Matchers;
-import org.json.JSONArray;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,12 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import se.travappar.api.dal.impl.UserDAO;
 import se.travappar.api.model.Users;
@@ -27,8 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({"file:src/main/webapp/WEB-INF/api-servlet.xml"})
-@TransactionConfiguration(defaultRollback = true)
-@Transactional
+//@TransactionConfiguration(defaultRollback = true)
+//@Transactional
 public class UsersControllerTest {
 
     @Autowired
@@ -49,13 +46,15 @@ public class UsersControllerTest {
         user.setDevice_id("device_id_1");
         userDAO.create(user);
 
-        // get lastID in the DB
-        MvcResult result = mockMvc.perform(get("/users/")).andReturn();
-        String content = result.getResponse().getContentAsString();
-        JSONArray jsonArray = new JSONArray(content);
-        this.lastID = Integer.parseInt(jsonArray.getJSONObject(jsonArray.length() - 1).get("id").toString());
+        this.lastID = user.getId().intValue();
     }
 
+    @After
+    public void clean() throws Exception {
+        Users user = userDAO.get((long) this.lastID);
+        if (user != null)
+            userDAO.delete(user);
+    }
 
     @Test
     public void getUsersList() throws Exception {
@@ -100,30 +99,27 @@ public class UsersControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", Matchers.is(this.lastID + 1)))
                 .andDo(print());
+
+        userDAO.delete(userDAO.get((long) this.lastID + 1));
     }
 
     @Test
     public void updateUser() throws Exception {
-//        // get lastID in the DB
-//        MvcResult result = mockMvc.perform(get("/tracks/")).andReturn();
-//        String content = result.getResponse().getContentAsString();
-//        JSONArray jsonArray = new JSONArray(content);
-//        this.lastID = Integer.parseInt(jsonArray.getJSONObject(jsonArray.length() - 1).get("id").toString());
-//
-//        Track track = new Track();
-//        track.setName("Track1");
-//        track.setAddress("Address 8675");
-//        track.setId((long) this.lastID);
-//        Gson gson = new Gson();
-//        String json = gson.toJson(track);
-//
-//        mockMvc.perform(put("/tracks/")
-//                .contentType("application/json")
-//                .content(json))
-//                .andExpect(jsonPath("$.id", Matchers.is(this.lastID)))
-//                .andExpect(jsonPath("$", Matchers.hasKey("address")))
-//                .andExpect(jsonPath("$", Matchers.hasKey("name")))
-//                .andDo(print());
+        Users user = new Users();
+        user.setEmail("test3@email.com");
+        user.setPassword("3ndPassword");
+        user.setDevice_id("device_id_3");
+        user.setId((long) this.lastID);
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        mockMvc.perform(put("/users/")
+                .contentType("application/json")
+                .content(json))
+                .andExpect(jsonPath("$.id", Matchers.is(this.lastID)))
+                .andExpect(jsonPath("$", Matchers.hasKey("email")))
+                .andExpect(jsonPath("$", Matchers.hasKey("password")))
+                .andDo(print());
     }
 }
 

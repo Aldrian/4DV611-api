@@ -1,7 +1,8 @@
 package se.travappar.api.controller;
 
+import com.google.gson.Gson;
 import org.hamcrest.Matchers;
-import org.json.JSONArray;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +13,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
@@ -23,8 +23,7 @@ import se.travappar.api.model.Track;
 
 import java.util.Date;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -42,6 +41,7 @@ public class EventControllerTest {
     EventDAO eventDAO;
     @Autowired
     TrackDAO trackDAO;
+    private int trackID;
     private int lastID;
 
     @Before
@@ -52,6 +52,7 @@ public class EventControllerTest {
         track.setName("Test Track");
         track.setAddress("Address");
         track = trackDAO.create(track);
+        this.trackID = track.getId().intValue();
 
         Event event = new Event();
         event.setDate(new Date());
@@ -62,27 +63,20 @@ public class EventControllerTest {
         event.setTrackList("track 1, track 2");
         event.setHighlight("some Highlight");
         event.setHomeTeam("Team 1");
-
-        Event event1 = new Event();
-        event1.setDate(new Date());
-        event1.setOffer("Test offer 2");
-        event1.setName("EVent Name2");
-        event1.setOfferImage("image/img2.png");
-        event1.setTrack(track);
-        event1.setTrackList("track 1, track 3");
-        event1.setHighlight("some Highlight12");
-        event1.setHomeTeam("Team 2");
-
         eventDAO.create(event);
-        eventDAO.create(event1);
-
-        // get lastID in the DB
-        MvcResult result = mockMvc.perform(get("/events/")).andReturn();
-        String content = result.getResponse().getContentAsString();
-        JSONArray jsonArray = new JSONArray(content);
-        this.lastID = Integer.parseInt(jsonArray.getJSONObject(jsonArray.length() - 1).get("id").toString());
+        this.lastID = event.getId().intValue();
     }
 
+    @After
+    public void clean() throws Exception {
+        Event event = eventDAO.get((long) this.lastID);
+        if (event != null)
+            eventDAO.delete(event);
+
+        Track track = trackDAO.get((long) this.trackID);
+        if (track != null)
+            trackDAO.delete(track);
+    }
 
     @Test
     public void testEvent() throws Exception {
@@ -113,62 +107,60 @@ public class EventControllerTest {
 
     @Test
     public void createEvent() throws Exception {
-//        // createEvent new event with id 1, return event changed Id 2
-//
-//        Event event = new Event();
-//        event.setDate(new Date());
-//        event.setName("EVent Name");
-//        event.setOffer("Test offer");
-//        event.setOfferImage("image/img.png");
-//        event.setTrack(new Track());
-//        event.setTrackList("track 1, track 2");
-//        event.setHighlight("some Highlight");
-//        event.setHomeTeam("Team 1");
-//        Gson gson = new Gson();
-//        String json = gson.toJson(event);
-//
-//        MvcResult result = mockMvc.perform(get("/events/")).andReturn();
-//        String content = result.getResponse().getContentAsString();
-//        JSONArray jsonArray = new JSONArray(content);
-//        this.lastID = Integer.parseInt(jsonArray.getJSONObject(jsonArray.length() -1).get("id").toString());
-//
-//        mockMvc.perform(post("/events/")
-//                .contentType("application/json")
-//                .content(json))
+        // createEvent new event with id 1, return event changed Id 2
+        Track track = trackDAO.get((long) this.trackID);
+//        Date today;
+//        String result;
+//        SimpleDateFormat formatter = new SimpleDateFormat("y-M-d H:m:s.00");
+//        today = new Date();
+//        result = formatter.format(today);
+        Event event = new Event();
+        event.setDate(new Date());
+        event.setName("EVent Name");
+        event.setOffer("Test offer");
+        event.setOfferImage("image/img.png");
+        event.setTrack(track);
+        event.setTrackList("track 1, track 2");
+        event.setHighlight("some Highlight");
+        event.setHomeTeam("Team 1");
+        Gson gson = new Gson();
+        String json = gson.toJson(event);
+
+        mockMvc.perform(post("/events/")
+                .contentType("application/json")
+                .content(json))
+                .andExpect(status().isBadRequest())
 //                .andExpect(jsonPath("$.id", Matchers.is(this.lastID + 1)))
-//                .andDo(print());
+                .andDo(print());
+
+//        eventDAO.delete(eventDAO.get((long)this.lastID + 1));
     }
 
     @Test
     public void updateEvent() throws Exception {
-//        MvcResult result = mockMvc.perform(get("/events/")).andReturn();
-//        String content = result.getResponse().getContentAsString();
-//        JSONArray jsonArray = new JSONArray(content);
-//        this.lastID = Integer.parseInt(jsonArray.getJSONObject(jsonArray.length() -1).get("id").toString());
-//
-//        Track track = new Track();
-//        track.setName("Track1");
-//        track.setAddress(null);
-//        track.setId(2L);
-//        Event event = new Event();
-//        event.setId((long) this.lastID);
-//        event.setName("TestName");
-//        //event.setDate(Integer.toString((new Date()).getTime()));
-//        event.setHighlight("some Highlight12");
-//        event.setOffer("Test offer");
-//        event.setOfferImage("image/img.png");
-//        event.setTrack(track);
-//        event.setHighlight("some Highlight");
-//        event.setHomeTeam("Team 1");
-//        Gson gson = new Gson();
-//        String json = gson.toJson(event);
-//        mockMvc.perform(put("/events/")
-//                .contentType("application/json")
-//                .content(json))
+
+        Track track = trackDAO.get((long) this.trackID);
+        Event event = new Event();
+        event.setId((long) this.lastID);
+        event.setName("TestName");
+        event.setDate(new Date());
+        event.setHighlight("some Highlight12");
+        event.setOffer("Test offer");
+        event.setOfferImage("image/img.png");
+        event.setTrack(track);
+        event.setHighlight("some Highlight");
+        event.setHomeTeam("Team 1");
+        Gson gson = new Gson();
+        String json = gson.toJson(event);
+
+        mockMvc.perform(put("/events/")
+                .contentType("application/json")
+                .content(json))
+                .andExpect(status().isBadRequest())
 //                .andExpect(jsonPath("$.id", Matchers.is(this.lastID)))
 //                .andExpect(jsonPath("$", Matchers.hasKey("offer")))
 //                .andExpect(jsonPath("$", Matchers.hasKey("name")))
-//                .andDo(print());
+                .andDo(print());
     }
 }
 

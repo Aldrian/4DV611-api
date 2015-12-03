@@ -3,6 +3,7 @@ package se.travappar.api.controller;
 import com.google.gson.Gson;
 import org.hamcrest.Matchers;
 import org.json.JSONArray;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,12 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import se.travappar.api.dal.impl.TrackDAO;
 import se.travappar.api.model.Track;
@@ -27,8 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({"file:src/main/webapp/WEB-INF/api-servlet.xml"})
-@TransactionConfiguration(defaultRollback = true)
-@Transactional
+//@TransactionConfiguration(defaultRollback = true)
+//@Transactional
 public class TrackControllerTest {
 
     @Autowired
@@ -48,13 +47,15 @@ public class TrackControllerTest {
         track.setAddress("Address 1234");
         trackDAO.create(track);
 
-        // get lastID in the DB
-        MvcResult result = mockMvc.perform(get("/tracks/")).andReturn();
-        String content = result.getResponse().getContentAsString();
-        JSONArray jsonArray = new JSONArray(content);
-        this.lastID = Integer.parseInt(jsonArray.getJSONObject(jsonArray.length() - 1).get("id").toString());
+        this.lastID = track.getId().intValue();
     }
 
+    @After
+    public void clean() throws Exception {
+        Track track = trackDAO.get((long) this.lastID);
+        if (track != null)
+            trackDAO.delete(track);
+    }
 
     @Test
     public void getTrackList() throws Exception {
@@ -98,30 +99,32 @@ public class TrackControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", Matchers.is(this.lastID + 1)))
                 .andDo(print());
+
+        trackDAO.delete(trackDAO.get((long) this.lastID + 1));
     }
 
     @Test
     public void updateTrack() throws Exception {
-//        // get lastID in the DB
-//        MvcResult result = mockMvc.perform(get("/tracks/")).andReturn();
-//        String content = result.getResponse().getContentAsString();
-//        JSONArray jsonArray = new JSONArray(content);
-//        this.lastID = Integer.parseInt(jsonArray.getJSONObject(jsonArray.length() - 1).get("id").toString());
-//
-//        Track track = new Track();
-//        track.setName("Track1");
-//        track.setAddress("Address 8675");
-//        track.setId((long) this.lastID);
-//        Gson gson = new Gson();
-//        String json = gson.toJson(track);
-//
-//        mockMvc.perform(put("/tracks/")
-//                .contentType("application/json")
-//                .content(json))
-//                .andExpect(jsonPath("$.id", Matchers.is(this.lastID)))
-//                .andExpect(jsonPath("$", Matchers.hasKey("address")))
-//                .andExpect(jsonPath("$", Matchers.hasKey("name")))
-//                .andDo(print());
+        // get lastID in the DB
+        MvcResult result = mockMvc.perform(get("/tracks/")).andReturn();
+        String content = result.getResponse().getContentAsString();
+        JSONArray jsonArray = new JSONArray(content);
+        this.lastID = Integer.parseInt(jsonArray.getJSONObject(jsonArray.length() - 1).get("id").toString());
+
+        Track track = new Track();
+        track.setName("Track1");
+        track.setAddress("Address 8675");
+        track.setId((long) this.lastID);
+        Gson gson = new Gson();
+        String json = gson.toJson(track);
+
+        mockMvc.perform(put("/tracks/")
+                .contentType("application/json")
+                .content(json))
+                .andExpect(jsonPath("$.id", Matchers.is(this.lastID)))
+                .andExpect(jsonPath("$", Matchers.hasKey("address")))
+                .andExpect(jsonPath("$", Matchers.hasKey("name")))
+                .andDo(print());
     }
 }
 
