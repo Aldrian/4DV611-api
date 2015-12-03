@@ -53,13 +53,16 @@ public class Track implements CommonEntity {
         Track track = (Track) o;
 
         if (!id.equals(track.id)) return false;
+        if (!name.equals(track.name)) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
     }
 
     @Override
