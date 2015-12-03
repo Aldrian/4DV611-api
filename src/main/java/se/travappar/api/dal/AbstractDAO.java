@@ -9,6 +9,8 @@ import java.util.List;
 
 public class AbstractDAO<T extends CommonEntity> extends HibernateDaoSupport {
 
+    protected String id_column = "id";
+
     Class<T> aClass;
 
     public AbstractDAO(Class<T> aClass) {
@@ -23,7 +25,7 @@ public class AbstractDAO<T extends CommonEntity> extends HibernateDaoSupport {
 
     @Transactional
     public void saveList(Collection<T> list) {
-        for(T t : list) {
+        for (T t : list) {
             getHibernateTemplate().merge(t);
         }
     }
@@ -48,8 +50,8 @@ public class AbstractDAO<T extends CommonEntity> extends HibernateDaoSupport {
 
     @Transactional
     public T get(Long id) {
-        List<?> list = getHibernateTemplate().find("from " + aClass.getSimpleName() + " where id=?", id);
-        if(list.size() > 0) {
+        List<?> list = getHibernateTemplate().find("from " + aClass.getSimpleName() + " where " + id_column + "=?", id);
+        if (list.size() > 0) {
             return (T) list.get(0);
         }
         return null;

@@ -31,16 +31,16 @@ public class UsersController {
         return getUserList();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{deviceId}", method = RequestMethod.GET)
     public
     @ResponseBody
-    Users getUser(@PathVariable long id) {
-        return userDAO.get(id);
+    Users getUser(@PathVariable long deviceId) {
+        return userDAO.get(deviceId);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteUser(@PathVariable long id) {
-        Users user = userDAO.get(id);
+    @RequestMapping(value = "/{deviceId}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteUser(@PathVariable long deviceId) {
+        Users user = userDAO.get(deviceId);
         userDAO.delete(user);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

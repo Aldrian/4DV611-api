@@ -6,5 +6,6 @@ import se.travappar.api.model.Users;
 public class UserDAO extends AbstractDAO<Users> {
     public UserDAO() {
         super(Users.class);
+        id_column  = "device_id";
     }
 }
