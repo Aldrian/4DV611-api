@@ -4,6 +4,7 @@ import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 import se.travappar.api.model.CommonEntity;
 
+import java.util.Collection;
 import java.util.List;
 
 public class AbstractDAO<T extends CommonEntity> extends HibernateDaoSupport {
@@ -19,6 +20,14 @@ public class AbstractDAO<T extends CommonEntity> extends HibernateDaoSupport {
         List<?> list = getHibernateTemplate().find("from " + aClass.getSimpleName() + "");
         return (List<T>) list;
     }
+
+    @Transactional
+    public void saveList(Collection<T> list) {
+        for(T t : list) {
+            getHibernateTemplate().merge(t);
+        }
+    }
+
 
     @Transactional
     public T create(T entity) {
