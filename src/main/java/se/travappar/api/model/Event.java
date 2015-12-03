@@ -1,13 +1,12 @@
 package se.travappar.api.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import javax.persistence.*;
-
-import org.hibernate.annotations.GenericGenerator;
-
-import java.io.Serializable;
 import java.util.Date;
-
-import static javax.persistence.GenerationType.IDENTITY;
+import java.util.List;
 
 
 @Entity
@@ -22,14 +21,13 @@ public class Event implements CommonEntity {
     String offerImage;
     String offer;
     Track track;
-    String trackList;
+    List<Race> raceList;
 
     public Event() {
 
     }
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     public Long getId() {
         return id;
@@ -67,6 +65,7 @@ public class Event implements CommonEntity {
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @Cascade(CascadeType.ALL)
     public Track getTrack() {
         return track;
     }
@@ -102,12 +101,38 @@ public class Event implements CommonEntity {
         this.name = eventName;
     }
 
-    @Column(name = "trackList")
-    public String getTrackList() {
-        return trackList;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "event")
+    @Cascade(CascadeType.ALL)
+    @JsonManagedReference
+    public List<Race> getRaceList() {
+        return raceList;
     }
 
-    public void setTrackList(String trackList) {
-        this.trackList = trackList;
+    public void setRaceList(List<Race> raceList) {
+        this.raceList = raceList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Event event = (Event) o;
+
+        if (!date.equals(event.date)) return false;
+        if (!id.equals(event.id)) return false;
+        if (raceList != null ? !raceList.equals(event.raceList) : event.raceList != null) return false;
+        if (!track.equals(event.track)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + date.hashCode();
+        result = 31 * result + track.hashCode();
+        result = 31 * result + (raceList != null ? raceList.hashCode() : 0);
+        return result;
     }
 }

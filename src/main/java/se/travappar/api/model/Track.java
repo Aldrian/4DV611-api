@@ -1,10 +1,9 @@
 package se.travappar.api.model;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
-
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 
 @Entity
@@ -19,7 +18,6 @@ public class Track implements CommonEntity {
     }
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     public Long getId() {
         return id;
@@ -45,5 +43,30 @@ public class Track implements CommonEntity {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Track track = (Track) o;
+
+        if (!id.equals(track.id)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Track{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
