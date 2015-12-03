@@ -15,6 +15,7 @@ public class Subscription implements CommonEntity {
 
     @Id
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "device_id", nullable = false)
     public Users getUser() {
         return user;
     }
