@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import se.travappar.api.dal.impl.EventDAO;
 import se.travappar.api.dal.impl.RaceDAO;
 import se.travappar.api.dal.impl.StartPositionDAO;
@@ -37,15 +40,19 @@ public class ExternalSourceCaller {
     TrackDAO trackDAO;
 
     Long norwayTrackId = 77L;
+    Long requestCount = 0L;
 
     OkHttpClient client = new OkHttpClient();
     ObjectMapper mapper = new ObjectMapper();
 
     Set<Track> trackSet = new HashSet<>();
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final Logger logger = LogManager.getLogger(ExternalSourceCaller.class);
 
     public List<Event> requestEventList() {
+        requestCount = 0L;
         try {
+            logger.info("Start fetching external event data.");
             String body = runQuery("http://178.62.191.16:8080/collector/collectorserver?ACTION=TRMEDIA_START_V2&JSON=1");
             ExternalEvent externalEventHolder = mapper.readValue(body, ExternalEvent.class);
             List<Event> resultList = new ArrayList<>();
@@ -54,7 +61,7 @@ public class ExternalSourceCaller {
                 for (ExternalEvent.RaceEvent externalEvent : events) {
                     Track track = new Track();
                     track.setId(externalEvent.getTrackId());
-                    if(norwayTrackId.equals(externalEvent.getTrackId())) {
+                    if (norwayTrackId.equals(externalEvent.getTrackId())) {
                         track.setName("Norway");
                     } else {
                         track.setName(externalEvent.getTrack());
@@ -72,13 +79,16 @@ public class ExternalSourceCaller {
             }
 //            trackDAO.saveList(trackSet);
 //            eventDAO.saveList(resultList);
+            logger.info("Finish fetching external event data. Executed " + requestCount + " requests to external source.");
             return resultList;
         } catch (Exception e) {
+            logger.error("Error during fetching external event data.", e);
             return null;
         }
     }
 
     private List<Race> getRaceList(Track track, Event event) throws IOException {
+        logger.info("Start fetching external race data for event: " + event.getId());
         List<Race> raceList = new ArrayList<>();
         String body = runQuery("http://178.62.191.16:8080/collector/collectorserver?ACTION=GETRACES&DATE=" + dateFormat.format(event.getDate()) + "&TRACKID=" + track.getId() + "&JSON=1");
         ExternalRace externalRaceHolder = mapper.readValue(body, ExternalRace.class);
@@ -97,11 +107,13 @@ public class ExternalSourceCaller {
                 raceList.add(race);
             }
         }
+        logger.info("Finish fetching external race data for event: " + event.getId());
 //        raceDAO.saveList(raceList);
         return raceList;
     }
 
     private List<StartPosition> getStartList(Track track, Event event, Race race) throws IOException {
+        logger.info("Start fetching external StartPosition data for Race: " + race.getId());
         List<StartPosition> startPositionList = new ArrayList<>();
         String body = runQuery("http://178.62.191.16:8080//collector/collectorserver?ACTION=GETRACEINFO&DATE=" + dateFormat.format(event.getDate()) + "&TRACKID=" + track.getId() + "&RACENBR=" + race.getNumber() + "&JSON=1");
         ExternalStartList externalStartListHolder = mapper.readValue(body, ExternalStartList.class);
@@ -126,11 +138,13 @@ public class ExternalSourceCaller {
                 startPositionList.add(startPosition);
             }
         }
+        logger.info("Finish fetching external StartPosition data for Race: " + race.getId());
 //        startPositionDAO.saveList(startPositionList);
         return startPositionList;
     }
 
     private String runQuery(String url) throws IOException {
+        requestCount = requestCount + 1;
         Request request = new Request.Builder()
                 .url(url)
                 .build();
@@ -143,15 +157,20 @@ public class ExternalSourceCaller {
         return trackSet;
     }
 
-    public void setTrackSet(Set<Track> trackSet) {
-        this.trackSet = trackSet;
-    }
-
     @PostConstruct
     public void loadDataOnStartup() {
         /*List<Event> eventList = requestEventList();
         Set<Track> trackSet = getTrackSet();
         trackDAO.saveList(trackSet);
         eventDAO.saveList(eventList);*/
+    }
+
+    @Scheduled(cron = "0 3 * * * *  ")
+    public void fetchAndSaveEvents() {
+        logger.info("Start scheduled fetching external data.");
+        List<Event> eventList = requestEventList();
+        trackDAO.saveList(trackSet);
+        eventDAO.saveList(eventList);
+        logger.info("Finish scheduled fetching external data.");
     }
 }
