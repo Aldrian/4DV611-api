@@ -1,5 +1,7 @@
 package se.travappar.api.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +18,13 @@ public class UsersController {
 
     @Autowired
     UserDAO userDAO;
+    private static final Logger logger = LogManager.getLogger(UsersController.class);
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public
     @ResponseBody
     List<Users> getUserList() {
+        logger.info("Getting user list Executed on /");
         return userDAO.getList();
     }
 
@@ -28,6 +32,7 @@ public class UsersController {
     public
     @ResponseBody
     List<Users> getUserListRoot() {
+        logger.info("Getting user list Executed on empty mapping");
         return getUserList();
     }
 
@@ -35,11 +40,13 @@ public class UsersController {
     public
     @ResponseBody
     Users getUser(@PathVariable long deviceId) {
+        logger.info("Getting user executed on / with id=" + deviceId);
         return userDAO.get(deviceId);
     }
 
     @RequestMapping(value = "/{deviceId}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteUser(@PathVariable long deviceId) {
+    public ResponseEntity deleteUser(@PathVariable String deviceId) {
+        logger.info("Delete user executed on / with id=" + deviceId);
         Users user = userDAO.get(deviceId);
         userDAO.delete(user);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -52,6 +59,7 @@ public class UsersController {
     public
     @ResponseBody
     Users createUser(@RequestBody Users user) {
+        logger.info("Creating user executed on /");
         return userDAO.create(user);
     }
 
@@ -62,6 +70,7 @@ public class UsersController {
     public
     @ResponseBody
     Users updateUser(@RequestBody Users user) {
+        logger.info("Update user executed on / with user with device_id=" + user.getDevice_id());
         return userDAO.update(user);
     }
 }
