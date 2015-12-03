@@ -60,7 +60,6 @@ public class EventControllerTest {
         event.setOffer("Test offer");
         event.setOfferImage("image/img.png");
         event.setTrack(track);
-        event.setTrackList("track 1, track 2");
         event.setHighlight("some Highlight");
         event.setHomeTeam("Team 1");
         eventDAO.create(event);
@@ -120,7 +119,6 @@ public class EventControllerTest {
         event.setOffer("Test offer");
         event.setOfferImage("image/img.png");
         event.setTrack(track);
-        event.setTrackList("track 1, track 2");
         event.setHighlight("some Highlight");
         event.setHomeTeam("Team 1");
         Gson gson = new Gson();
