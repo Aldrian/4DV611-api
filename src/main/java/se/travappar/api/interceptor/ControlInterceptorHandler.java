@@ -22,7 +22,8 @@ public class ControlInterceptorHandler extends HandlerInterceptorAdapter {
     @Override
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
         httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
-        httpServletResponse.addHeader("Access-Control-Request-Methods", "OPTIONS, PUT, GET, DELETE, POST");
+        httpServletResponse.addHeader("Access-Control-Request-Methods", "PUT, GET, DELETE, POST");
+        httpServletResponse.addHeader("Access-Control-Request-Headers", "accept, content-type");
         logger.info("Request " + httpServletRequest.getMethod() + " handled with resonse headers " + httpServletResponse.getHeaderNames());
     }
 
