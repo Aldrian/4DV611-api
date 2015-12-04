@@ -165,7 +165,7 @@ public class ExternalSourceCaller {
         eventDAO.saveList(eventList);*/
     }
 
-    @Scheduled(cron = "0 3 * * * *  ")
+    @Scheduled(cron = "0 0 3 * * *")
     public void fetchAndSaveEvents() {
         logger.info("Start scheduled fetching external data.");
         List<Event> eventList = requestEventList();
