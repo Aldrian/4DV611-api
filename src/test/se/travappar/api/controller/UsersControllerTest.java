@@ -43,10 +43,10 @@ public class UsersControllerTest {
         Users user = new Users();
         user.setEmail("test1@email.org");
         user.setPassword("1stPassword");
-        user.setDevice_id("device_id_1");
+        user.setDeviceId("device_id_1");
         userDAO.create(user);
 
-        this.lastID = user.getDevice_id();
+        this.lastID = user.getDeviceId();
     }
 
     @After
@@ -90,7 +90,7 @@ public class UsersControllerTest {
         user.setEmail("test2@email.org");
         user.setPassword("2ndPassword");
         String device_id_2 = "device_id_2";
-        user.setDevice_id(device_id_2);
+        user.setDeviceId(device_id_2);
         Gson gson = new Gson();
         String json = gson.toJson(user);
 
@@ -109,7 +109,7 @@ public class UsersControllerTest {
         Users user = new Users();
         user.setEmail("test3@email.com");
         user.setPassword("3ndPassword");
-        user.setDevice_id(lastID);
+        user.setDeviceId(lastID);
         Gson gson = new Gson();
         String json = gson.toJson(user);
 

@@ -70,7 +70,7 @@ public class UsersController {
     public
     @ResponseBody
     Users updateUser(@RequestBody Users user) {
-        logger.info("Update user executed on / with user with device_id=" + user.getDevice_id());
+        logger.info("Update user executed on / with user with device_id=" + user.getDeviceId());
         return userDAO.update(user);
     }
 }

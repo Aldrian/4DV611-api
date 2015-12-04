@@ -12,7 +12,7 @@ public class Users implements CommonEntity {
 
     String email;
     String password;
-    String device_id;
+    String deviceId;
 
     public Users() {
 
@@ -38,11 +38,11 @@ public class Users implements CommonEntity {
 
     @Id
     @Column(name = "device_id")
-    public String getDevice_id() {
-        return device_id;
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public void setDevice_id(String device_id) {
-        this.device_id = device_id;
+    public void setDeviceId(String device_id) {
+        this.deviceId = device_id;
     }
 }
