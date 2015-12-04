@@ -11,12 +11,14 @@ public class ControlInterceptorHandler extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
+        httpServletResponse.addHeader("Access-Control-Request-Method", "OPTIONS, PUT, GET, DELETE, POST");
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
         httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+        httpServletResponse.addHeader("Access-Control-Request-Method", "OPTIONS, PUT, GET, DELETE, POST");
     }
 
 }
