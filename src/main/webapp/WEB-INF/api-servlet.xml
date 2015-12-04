@@ -21,10 +21,6 @@
         </property>
     </bean>
 
-    <mvc:interceptors>
-        <bean class="se.travappar.api.interceptor.ControlInterceptorHandler"/>
-    </mvc:interceptors>
-
     <!-- Http Json MessageConverter -->
     <bean id="jsonConverter"
           class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
