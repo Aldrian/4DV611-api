@@ -15,15 +15,15 @@ public class ControlInterceptorHandler extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         logger.info("Handling request " + httpServletRequest.getMethod() + " with headers " + httpServletRequest.getHeaderNames());
-        httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
-        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
-        httpServletResponse.addHeader("Access-Control-Request-Methods", "PUT, GET, DELETE, POST");
-        httpServletResponse.addHeader("Access-Control-Request-Headers", "accept, content-type");
+        httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
+        httpServletResponse.addHeader("Access-Control-Request-Methods", "POST, GET, OPTIONS, DELETE, PUT");
+        httpServletResponse.addHeader("Access-Control-Request-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        httpServletResponse.addHeader("Access-Control-Max-Age", "3600");
         logger.info("Request " + httpServletRequest.getMethod() + " handled with resonse headers " + httpServletResponse.getHeaderNames());
     }
 
