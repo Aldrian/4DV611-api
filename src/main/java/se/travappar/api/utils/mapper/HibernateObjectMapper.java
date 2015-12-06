@@ -1,4 +1,4 @@
-package se.travappar.api.mapper;
+package se.travappar.api.utils.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;

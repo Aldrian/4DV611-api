@@ -13,6 +13,7 @@ public class Track implements CommonEntity {
     Long id;
     String name;
     String address;
+    String about;
 
     public Track() {
     }
@@ -43,6 +44,15 @@ public class Track implements CommonEntity {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Column(name = "about")
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
     }
 
     @Override

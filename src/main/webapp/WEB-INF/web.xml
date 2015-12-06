@@ -24,7 +24,7 @@
 
     <filter>
         <filter-name>corsFilter</filter-name>
-        <filter-class>se.travappar.api.filter.SimpleCORSFilter</filter-class>
+        <filter-class>se.travappar.api.utils.filter.SimpleCORSFilter</filter-class>
     </filter>
 
     <filter-mapping>

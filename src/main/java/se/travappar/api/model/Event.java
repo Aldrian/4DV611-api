@@ -19,6 +19,7 @@ public class Event implements CommonEntity {
     String highlight;
     String homeTeam;
     String offerImage;
+    String offerImageSource;
     String offer;
     Track track;
     List<Race> raceList;
@@ -110,6 +111,15 @@ public class Event implements CommonEntity {
 
     public void setRaceList(List<Race> raceList) {
         this.raceList = raceList;
+    }
+
+    @Transient
+    public String getOfferImageSource() {
+        return offerImageSource;
+    }
+
+    public void setOfferImageSource(String offerImageSource) {
+        this.offerImageSource = offerImageSource;
     }
 
     @Override

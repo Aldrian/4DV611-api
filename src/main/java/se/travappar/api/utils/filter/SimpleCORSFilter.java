@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package se.travappar.api.filter;
+package se.travappar.api.utils.filter;
 
 import org.springframework.stereotype.Component;
 

@@ -26,7 +26,7 @@
           class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
         <property name="supportedMediaTypes" value="application/json"/>
         <property name="objectMapper">
-            <bean class="se.travappar.api.mapper.HibernateObjectMapper"/>
+            <bean class="se.travappar.api.utils.mapper.HibernateObjectMapper"/>
         </property>
     </bean>
 
@@ -59,6 +59,7 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
     <bean id="externalSourceCaller" class="se.travappar.api.dal.ExternalSourceCaller"/>
+    <bean id="imageHelper" class="se.travappar.api.utils.ImageHelper"/>
 
     <tx:annotation-driven/>
 
