@@ -11,8 +11,12 @@ import javax.persistence.Table;
 public class Users implements CommonEntity {
 
     String email;
+    String username;
     String password;
     String deviceId;
+    String role;
+    Long trackId;
+    Boolean enabled;
 
     public Users() {
 
@@ -44,5 +48,41 @@ public class Users implements CommonEntity {
 
     public void setDeviceId(String device_id) {
         this.deviceId = device_id;
+    }
+
+    @Column(name = "username")
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Column(name = "role")
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    @Column(name = "track_id")
+    public Long getTrackId() {
+        return trackId;
+    }
+
+    public void setTrackId(Long trackId) {
+        this.trackId = trackId;
+    }
+
+    @Column(name = "enabled")
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }
