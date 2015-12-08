@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.travappar.api.dal.impl.UserDAO;
+import se.travappar.api.model.UserRole;
 import se.travappar.api.model.Users;
 
 import javax.ws.rs.core.MediaType;
@@ -60,6 +61,9 @@ public class UsersController {
     @ResponseBody
     Users createUser(@RequestBody Users user) {
         logger.info("Creating user executed on /");
+        if(user.getRole() == null) {
+            user.setRole(UserRole.ROLE_USER.getCode());
+        }
         return userDAO.create(user);
     }
 
