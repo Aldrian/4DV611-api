@@ -8,14 +8,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import se.travappar.api.dal.impl.EventDAO;
-import se.travappar.api.dal.impl.RaceDAO;
-import se.travappar.api.dal.impl.StartPositionDAO;
-import se.travappar.api.dal.impl.TrackDAO;
-import se.travappar.api.model.Event;
-import se.travappar.api.model.Race;
-import se.travappar.api.model.StartPosition;
-import se.travappar.api.model.Track;
+import se.travappar.api.dal.impl.*;
+import se.travappar.api.model.*;
 import se.travappar.api.model.external.ExternalEvent;
 import se.travappar.api.model.external.ExternalRace;
 import se.travappar.api.model.external.ExternalStartList;
@@ -38,6 +32,8 @@ public class ExternalSourceCaller {
     RaceDAO raceDAO;
     @Autowired
     TrackDAO trackDAO;
+    @Autowired
+    UserDAO userDAO;
 
     Long norwayTrackId = 77L;
     Long requestCount = 0L;
@@ -171,6 +167,17 @@ public class ExternalSourceCaller {
         List<Event> eventList = requestEventList();
         trackDAO.saveList(trackSet);
         eventDAO.saveList(eventList);
+        List<Users> adminList = new ArrayList<>();
+        for(Track track : trackSet) {
+            Users users = new Users();
+            users.setRole(UserRole.ROLE_ADMIN.getCode());
+            users.setUsername(track.getName().toLowerCase().replace(" ", ""));
+            users.setTrackId(track.getId());
+            users.setDeviceId(track.getId().toString());
+            users.setEnabled(false);
+            adminList.add(users);
+        }
+        userDAO.saveList(adminList);
         logger.info("Finish scheduled fetching external data.");
     }
 }
