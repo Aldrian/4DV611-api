@@ -51,11 +51,13 @@ public class HelloWorldController {
         helloWorld.setField("Hello World!");
 
         Track track = new Track();
+        track.setId(1L);
         track.setName("Test Track");
         track.setAddress("Address");
         track = trackDAO.create(track);
 
         Event event = new Event();
+        event.setId(1L);
         event.setDate(new Date());
         event.setName("EVent Name");
         event.setOffer("Test offer");
@@ -64,6 +66,7 @@ public class HelloWorldController {
         event.setHomeTeam("Team 1");
 
         Event event1 = new Event();
+        event1.setId(2L);
         event1.setDate(new Date());
         event1.setOffer("Test offer 2");
         event1.setName("EVent Name2");
