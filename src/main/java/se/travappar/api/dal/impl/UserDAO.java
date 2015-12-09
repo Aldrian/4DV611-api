@@ -18,4 +18,12 @@ public class UserDAO extends AbstractDAO<Users> {
         }
         return null;
     }
+
+    public Users findByUsernameOrDeviceId(String identifier) {
+        List<Users> list = (List<Users>) getHibernateTemplate().find("from " + Users.class.getSimpleName() + " where device_id=? OR username=?", identifier, identifier);
+        if (list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
 }

@@ -5,12 +5,15 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import se.travappar.api.dal.impl.UserDAO;
 import se.travappar.api.model.UserRole;
 import se.travappar.api.model.Users;
+import se.travappar.api.utils.security.CurrentUser;
 
 import javax.ws.rs.core.MediaType;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -20,6 +23,13 @@ public class UsersController {
     @Autowired
     UserDAO userDAO;
     private static final Logger logger = LogManager.getLogger(UsersController.class);
+
+    @RequestMapping(value = "/auth", method = RequestMethod.GET)
+    public ResponseEntity<Users> authorization(Principal principal) {
+        CurrentUser user = (CurrentUser) ((Authentication) principal).getPrincipal();
+        logger.info("Authorization user");
+        return ResponseEntity.ok().body(userDAO.findByUsernameOrDeviceId(principal.getName()));
+    }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public
@@ -61,7 +71,7 @@ public class UsersController {
     @ResponseBody
     Users createUser(@RequestBody Users user) {
         logger.info("Creating user executed on /");
-        if(user.getRole() == null) {
+        if (user.getRole() == null) {
             user.setRole(UserRole.ROLE_USER.getCode());
         }
         return userDAO.create(user);
