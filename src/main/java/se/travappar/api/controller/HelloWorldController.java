@@ -13,8 +13,6 @@ import se.travappar.api.model.HelloWorld;
 import se.travappar.api.model.Track;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 @RestController
 public class HelloWorldController {
@@ -41,10 +39,7 @@ public class HelloWorldController {
     HelloWorld testExternal() {
         HelloWorld helloWorld = new HelloWorld();
         helloWorld.setField("Hello World!");
-        List<Event> eventList = externalSourceCaller.requestEventList();
-        Set<Track> trackSet = externalSourceCaller.getTrackSet();
-        trackDAO.saveList(trackSet);
-        eventDAO.saveList(eventList);
+        externalSourceCaller.fetchAndSaveEvents();
         return helloWorld;
     }
 
