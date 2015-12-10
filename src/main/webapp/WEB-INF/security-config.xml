@@ -8,11 +8,11 @@
 					  http://www.springframework.org/schema/security/spring-security.xsd">
 
     <security:http auto-config="true">
-        <security:intercept-url pattern="/**" access="permitAll"/>
-<!--        <security:intercept-url method="OPTIONS" pattern="/**" access="permitAll"/>
+        <!--<security:intercept-url pattern="/**" access="permitAll"/>-->
+        <security:intercept-url method="OPTIONS" pattern="/**" access="permitAll"/>
         <security:intercept-url method="POST" pattern="/api/v1.0/users/" access="permitAll"/>
         <security:intercept-url pattern="/**"
-                                access="hasRole('ROLE_USER') || hasRole('ROLE_SUPER_ADMIN') || hasRole('ROLE_ADMIN')"/>-->
+                                access="hasRole('ROLE_USER') || hasRole('ROLE_SUPER_ADMIN') || hasRole('ROLE_ADMIN')"/>
         <security:logout/>
         <security:http-basic/>
         <security:csrf disabled="true"/>

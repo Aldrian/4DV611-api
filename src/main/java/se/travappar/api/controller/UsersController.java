@@ -74,6 +74,9 @@ public class UsersController {
         if (user.getRole() == null) {
             user.setRole(UserRole.ROLE_USER.getCode());
         }
+        if(user.getEnabled() == null) {
+            user.setEnabled(true);
+        }
         return userDAO.create(user);
     }
 
