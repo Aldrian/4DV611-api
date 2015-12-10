@@ -80,15 +80,17 @@ public class EventController {
     @ResponseBody
     ResponseEntity<Event> updateEvent(HttpServletRequest request, @RequestBody Event event) {
         logger.info("Update event executed on / with event with id=" + event.getId());
-        try {
-            String offerImageUrl = imageHelper.saveOfferImage(event.getOfferImageSource(), event.getId().toString());
-            event.setOfferImage(offerImageUrl);
-        } catch (Exception e) {
-            logger.error("Error while saving image", e);
-            if(e instanceof RuntimeException) {
-                return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
+        if(event.getOfferImageSource() != null) {
+            try {
+                String offerImageUrl = imageHelper.saveOfferImage(event.getOfferImageSource(), event.getId().toString());
+                event.setOfferImage(offerImageUrl);
+            } catch (Exception e) {
+                logger.error("Error while saving image", e);
+                if (e instanceof RuntimeException) {
+                    return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
+                }
+                return new ResponseEntity<Event>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            return new ResponseEntity<Event>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<Event>(eventDAO.update(event), HttpStatus.OK);
     }

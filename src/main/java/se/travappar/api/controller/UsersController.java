@@ -50,7 +50,7 @@ public class UsersController {
     @RequestMapping(value = "/{deviceId}", method = RequestMethod.GET)
     public
     @ResponseBody
-    Users getUser(@PathVariable long deviceId) {
+    Users getUser(@PathVariable String deviceId) {
         logger.info("Getting user executed on / with id=" + deviceId);
         return userDAO.get(deviceId);
     }
