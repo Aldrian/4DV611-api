@@ -30,8 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({"file:src/main/webapp/WEB-INF/api-servlet.xml"})
-@TransactionConfiguration(defaultRollback = true)
-@Transactional
+//@TransactionConfiguration(defaultRollback = true)
+//@Transactional
 public class EventControllerTest {
 
     @Autowired
@@ -49,12 +49,14 @@ public class EventControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
         Track track = new Track();
-        track.setName("Test Track");
-        track.setAddress("Address");
-        track = trackDAO.create(track);
-        this.trackID = track.getId().intValue();
+        track.setId(1L);
+        track.setName("event track");
+        track.setAddress("Address1");
+//        track = trackDAO.create(track);
+//        this.trackID = track.getId().intValue();
 
         Event event = new Event();
+        event.setId(1L);
         event.setDate(new Date());
         event.setName("EVent Name");
         event.setOffer("Test offer");
@@ -107,14 +109,14 @@ public class EventControllerTest {
     @Test
     public void createEvent() throws Exception {
         // createEvent new event with id 1, return event changed Id 2
-        Track track = trackDAO.get((long) this.trackID);
-//        Date today;
-//        String result;
-//        SimpleDateFormat formatter = new SimpleDateFormat("y-M-d H:m:s.00");
-//        today = new Date();
-//        result = formatter.format(today);
+//        Track track = trackDAO.get((long) this.trackID);
+        Track track = new Track();
+        track.setId(2L);
+        track.setName("event2 track");
+        track.setAddress("Address2");
         Event event = new Event();
-        event.setDate(new Date());
+        event.setId(2L);
+        event.setDate(null);
         event.setName("EVent Name");
         event.setOffer("Test offer");
         event.setOfferImage("image/img.png");
@@ -127,21 +129,25 @@ public class EventControllerTest {
         mockMvc.perform(post("/events/")
                 .contentType("application/json")
                 .content(json))
-                .andExpect(status().isBadRequest())
-//                .andExpect(jsonPath("$.id", Matchers.is(this.lastID + 1)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", Matchers.is(2)))
                 .andDo(print());
 
-//        eventDAO.delete(eventDAO.get((long)this.lastID + 1));
+        eventDAO.delete(eventDAO.get(2L));
+        trackDAO.delete(trackDAO.get(2L));
     }
 
     @Test
     public void updateEvent() throws Exception {
 
-        Track track = trackDAO.get((long) this.trackID);
+        Track track = new Track();
+        track.setId(3L);
+        track.setName("event2 track3");
+        track.setAddress("Address2");
         Event event = new Event();
-        event.setId((long) this.lastID);
+        event.setId(2L);
         event.setName("TestName");
-        event.setDate(new Date());
+        event.setDate(null);
         event.setHighlight("some Highlight12");
         event.setOffer("Test offer");
         event.setOfferImage("image/img.png");

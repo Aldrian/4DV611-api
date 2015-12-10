@@ -43,6 +43,7 @@ public class TrackControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
         Track track = new Track();
+        track.setId(1L);
         track.setName("Test Track 1");
         track.setAddress("Address 1234");
         trackDAO.create(track);
@@ -88,6 +89,7 @@ public class TrackControllerTest {
     public void createTrack() throws Exception {
         // createEvent new event with id 1, return event changed Id 2
         Track track = new Track();
+        track.setId(2L);
         track.setName("Track1");
         track.setAddress("Address 5678");
         Gson gson = new Gson();
@@ -100,7 +102,7 @@ public class TrackControllerTest {
                 .andExpect(jsonPath("$.id", Matchers.is(this.lastID + 1)))
                 .andDo(print());
 
-        trackDAO.delete(trackDAO.get((long) this.lastID + 1));
+        trackDAO.delete(trackDAO.get(2L));
     }
 
     @Test
@@ -112,6 +114,7 @@ public class TrackControllerTest {
         this.lastID = Integer.parseInt(jsonArray.getJSONObject(jsonArray.length() - 1).get("id").toString());
 
         Track track = new Track();
+        track.setId(1L);
         track.setName("Track1");
         track.setAddress("Address 8675");
         track.setId((long) this.lastID);
@@ -121,7 +124,7 @@ public class TrackControllerTest {
         mockMvc.perform(put("/tracks/")
                 .contentType("application/json")
                 .content(json))
-                .andExpect(jsonPath("$.id", Matchers.is(this.lastID)))
+                .andExpect(jsonPath("$.id", Matchers.is(1)))
                 .andExpect(jsonPath("$", Matchers.hasKey("address")))
                 .andExpect(jsonPath("$", Matchers.hasKey("name")))
                 .andDo(print());
