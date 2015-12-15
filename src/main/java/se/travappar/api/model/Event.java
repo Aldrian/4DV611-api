@@ -25,9 +25,7 @@ public class Event implements CommonEntity {
     List<Race> raceList;
     Boolean published;
 
-
     public Event() {
-
     }
 
     @Id
@@ -68,7 +66,7 @@ public class Event implements CommonEntity {
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @Cascade({CascadeType.SAVE_UPDATE,CascadeType.MERGE, CascadeType.PERSIST})
+    @Cascade({CascadeType.SAVE_UPDATE, CascadeType.MERGE, CascadeType.PERSIST})
     public Track getTrack() {
         return track;
     }
@@ -86,11 +84,14 @@ public class Event implements CommonEntity {
         this.highlight = highlight;
     }
 
-    @Column(name="published", nullable=false, columnDefinition="boolean default false")
+    @Column(name = "published", nullable = false, columnDefinition = "boolean default false")
     public Boolean getPublished() {
         return published;
     }
-    public void setPublished(Boolean published) { this.published = published; }
+
+    public void setPublished(Boolean published) {
+        this.published = published;
+    }
 
     @Column(name = "homeTeam")
     public String getHomeTeam() {
