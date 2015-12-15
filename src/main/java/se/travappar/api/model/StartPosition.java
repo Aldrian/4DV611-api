@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
+@DynamicUpdate
 @Table(name = "StartPosition")
 public class StartPosition implements CommonEntity {
     Long id;

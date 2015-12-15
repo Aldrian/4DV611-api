@@ -3,6 +3,7 @@ package se.travappar.api.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.List;
 
 
 @Entity
+@DynamicUpdate
 @Table(name = "Event")
 public class Event implements CommonEntity {
 
