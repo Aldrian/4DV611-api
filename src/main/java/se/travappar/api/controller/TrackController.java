@@ -10,6 +10,7 @@ import se.travappar.api.dal.impl.TrackDAO;
 import se.travappar.api.model.Track;
 
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,7 +26,7 @@ public class TrackController {
     @ResponseBody
     List<Track> getTrackList() {
         logger.info("Getting track list Executed on /");
-        return trackDAO.getList();
+        return trackDAO.getList(new ArrayList<>());
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
