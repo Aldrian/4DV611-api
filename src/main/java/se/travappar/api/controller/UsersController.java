@@ -3,6 +3,7 @@ package se.travappar.api.controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,7 +15,7 @@ import se.travappar.api.utils.security.CurrentUser;
 
 import javax.ws.rs.core.MediaType;
 import java.security.Principal;
-import java.util.List;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -32,19 +33,19 @@ public class UsersController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    List<Users> getUserList() {
+    public ResponseEntity<?> getUserList(Principal principal) {
         logger.info("Getting user list Executed on /");
-        return userDAO.getList();
+        CurrentUser currentUser = (CurrentUser) ((Authentication) principal).getPrincipal();
+        if (!UserRole.ROLE_SUPER_ADMIN.equals(currentUser.getRole())) {
+            return new ResponseEntity<>("User has no rights to access this resource", HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(userDAO.getList(new ArrayList<>()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    List<Users> getUserListRoot() {
+    public ResponseEntity<?> getUserListRoot(Principal principal) {
         logger.info("Getting user list Executed on empty mapping");
-        return getUserList();
+        return getUserList(principal);
     }
 
     @RequestMapping(value = "/{deviceId}", method = RequestMethod.GET)
@@ -67,17 +68,26 @@ public class UsersController {
             MediaType.MULTIPART_FORM_DATA,
             MediaType.APPLICATION_JSON,
             MediaType.TEXT_PLAIN})
-    public
-    @ResponseBody
-    Users createUser(@RequestBody Users user) {
+    public ResponseEntity<?> createUser(@RequestBody Users user) {
         logger.info("Creating user executed on /");
         if (user.getRole() == null) {
             user.setRole(UserRole.ROLE_USER.getCode());
         }
-        if(user.getEnabled() == null) {
+        if (user.getEnabled() == null) {
             user.setEnabled(true);
         }
-        return userDAO.create(user);
+        ResponseEntity<?> responseEntity = null;
+        try {
+            responseEntity = new ResponseEntity<>(userDAO.create(user), HttpStatus.OK);
+        } catch (RuntimeException e) {
+            Throwable rootCause = ((DataIntegrityViolationException) e).getRootCause();
+            if(rootCause.getMessage().contains("duplicate key")) {
+                responseEntity = new ResponseEntity<>("DeviceID is already in use.", HttpStatus.BAD_REQUEST);
+            } else {
+                responseEntity = new ResponseEntity<>(e.getMessage() + " : " + rootCause.getMessage() , HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        return responseEntity;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_FORM_URLENCODED,
