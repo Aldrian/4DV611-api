@@ -13,6 +13,7 @@ public class CurrentUser extends User {
 
     String email;
     String deviceId;
+    Long trackId;
     UserRole role;
 
     public CurrentUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
@@ -32,6 +33,7 @@ public class CurrentUser extends User {
         deviceId = users.getDeviceId();
         role = UserRole.getByCode(users.getRole());
         email = users.getEmail();
+        trackId = users.getTrackId();
     }
 
     public String getEmail() {
@@ -44,5 +46,9 @@ public class CurrentUser extends User {
 
     public UserRole getRole() {
         return role;
+    }
+
+    public Long getTrackId() {
+        return trackId;
     }
 }
