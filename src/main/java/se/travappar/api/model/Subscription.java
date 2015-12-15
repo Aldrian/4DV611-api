@@ -1,20 +1,20 @@
 package se.travappar.api.model;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "Subscription")
 public class Subscription implements CommonEntity {
 
     Users user;
-    Track track;
+    List<Track> trackList;
 
     public Subscription() {
     }
 
     @Id
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "device_id", nullable = false)
     public Users getUser() {
         return user;
@@ -24,13 +24,12 @@ public class Subscription implements CommonEntity {
         this.user = users;
     }
 
-    @Id
-    @ManyToOne(fetch = FetchType.EAGER)
-    public Track getTrack() {
-        return track;
+    @OneToMany(fetch = FetchType.EAGER)
+    public List<Track> getTrackList() {
+        return trackList;
     }
 
-    public void setTrack(Track track) {
-        this.track = track;
+    public void setTrackList(List<Track> trackList) {
+        this.trackList = trackList;
     }
 }
