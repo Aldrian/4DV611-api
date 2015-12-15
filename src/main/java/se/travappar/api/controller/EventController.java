@@ -6,13 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import se.travappar.api.dal.impl.EventDAO;
 import se.travappar.api.model.Event;
+import se.travappar.api.model.filter.Filtering;
 import se.travappar.api.utils.ImageHelper;
+import se.travappar.api.utils.security.CurrentUser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MediaType;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -31,17 +37,28 @@ public class EventController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Event> getEventList() {
+    List<Event> getEventList(Principal principal) {
         logger.info("Getting event list Executed on /");
-        return eventDAO.getList();
+        CurrentUser currentUser = (CurrentUser) ((Authentication) principal).getPrincipal();
+        switch (currentUser.getRole()) {
+            case ROLE_SUPER_ADMIN:
+                return eventDAO.getList(new ArrayList<>());
+            case ROLE_ADMIN:
+                Filtering adminFiltering = new Filtering("track_id", "=", "'" + Long.toString(currentUser.getTrackId()) + "'");
+                return eventDAO.getList(Arrays.asList(adminFiltering));
+            case ROLE_USER:
+                Filtering publishFilter = new Filtering("published", "=", "'" + Boolean.TRUE.toString() + "'");
+                return eventDAO.getList(Arrays.asList(publishFilter));
+        }
+        return eventDAO.getList(new ArrayList<>());
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Event> getEventListRoot() {
+    List<Event> getEventListRoot(Principal principal) {
         logger.info("Getting event list Executed on empty mapping");
-        return getEventList();
+        return getEventList(principal);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
