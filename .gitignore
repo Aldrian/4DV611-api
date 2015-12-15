@@ -15,5 +15,10 @@ hs_err_pid*
 .idea/
 *.iml
 
+# eclipse files
+.settings/
+.classpath
+.project
+
 # target directory
 target/
