@@ -23,6 +23,8 @@ public class Event implements CommonEntity {
     String offer;
     Track track;
     List<Race> raceList;
+    Boolean published;
+
 
     public Event() {
 
@@ -83,6 +85,12 @@ public class Event implements CommonEntity {
     public void setHighlight(String highlight) {
         this.highlight = highlight;
     }
+
+    @Column(name="published", nullable=false, columnDefinition="boolean default false")
+    public Boolean getPublished() {
+        return published;
+    }
+    public void setPublished(Boolean published) { this.published = published; }
 
     @Column(name = "homeTeam")
     public String getHomeTeam() {
