@@ -3,6 +3,7 @@ package se.travappar.api.dal;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 import se.travappar.api.model.CommonEntity;
+import se.travappar.api.model.filter.Filtering;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,7 +19,7 @@ public class AbstractDAO<T extends CommonEntity> extends HibernateDaoSupport {
     }
 
     @Transactional
-    public List<T> getList() {
+    public List<T> getList(List<Filtering> filteringList) {
         List<?> list = getHibernateTemplate().find("from " + aClass.getSimpleName() + "");
         return (List<T>) list;
     }
