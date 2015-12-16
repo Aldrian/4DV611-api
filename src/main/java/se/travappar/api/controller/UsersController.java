@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import se.travappar.api.dal.impl.UserDAO;
 import se.travappar.api.model.UserRole;
 import se.travappar.api.model.Users;
+import se.travappar.api.utils.publish.MailChimpHelper;
 import se.travappar.api.utils.security.CurrentUser;
 
 import javax.ws.rs.core.MediaType;
@@ -23,6 +24,8 @@ public class UsersController {
 
     @Autowired
     UserDAO userDAO;
+    @Autowired
+    MailChimpHelper mailChimpHelper;
     private static final Logger logger = LogManager.getLogger(UsersController.class);
 
     @RequestMapping(value = "/auth", method = RequestMethod.GET)
@@ -97,9 +100,18 @@ public class UsersController {
             MediaType.APPLICATION_JSON,
             MediaType.TEXT_PLAIN})
     public
-    @ResponseBody
-    Users updateUser(@RequestBody Users user) {
+    ResponseEntity updateUser(@RequestBody Users user) {
         logger.info("Update user executed on / with user with device_id=" + user.getDeviceId());
-        return userDAO.update(user);
+        Users updatedUser = userDAO.update(user);
+        if(updatedUser.getEmail() != null) {
+            try {
+                Users users = mailChimpHelper.subscribeUserToList(updatedUser);
+                updatedUser = userDAO.update(users);
+            } catch (Exception e) {
+                logger.info("Error while subscribing user to MailChimp list. " + user.getDeviceId(), e);
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 }
