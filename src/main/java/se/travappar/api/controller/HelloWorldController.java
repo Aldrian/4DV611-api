@@ -11,6 +11,7 @@ import se.travappar.api.dal.impl.TrackDAO;
 import se.travappar.api.model.Event;
 import se.travappar.api.model.HelloWorld;
 import se.travappar.api.model.Track;
+import se.travappar.api.utils.publish.PublishEventHelper;
 
 import java.util.Date;
 
@@ -19,6 +20,8 @@ public class HelloWorldController {
 
     @Autowired
     EventDAO eventDAO;
+    @Autowired
+    PublishEventHelper publishEventHelper;
     @Autowired
     TrackDAO trackDAO;
     @Autowired
@@ -40,6 +43,16 @@ public class HelloWorldController {
         HelloWorld helloWorld = new HelloWorld();
         helloWorld.setField("Hello World!");
         externalSourceCaller.fetchAndSaveEvents();
+        return helloWorld;
+    }
+
+    @RequestMapping(value = "/testPair", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    HelloWorld testPair() {
+        HelloWorld helloWorld = new HelloWorld();
+        helloWorld.setField("Hello World!");
+        externalSourceCaller.refreshMailChimpData();
         return helloWorld;
     }
 
