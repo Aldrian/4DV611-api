@@ -20,17 +20,24 @@ public class AbstractDAO<T extends CommonEntity> extends HibernateDaoSupport {
 
     @Transactional
     public List<T> getList(List<Filtering> filteringList) {
-        List<?> list = getHibernateTemplate().find("from " + aClass.getSimpleName() + "");
+        StringBuilder stringBuilder = getWhereFiltering(filteringList);
+        List<?> list = getHibernateTemplate().find("from " + aClass.getSimpleName() + stringBuilder.toString());
         return (List<T>) list;
     }
 
     @Transactional
-    public void saveList(Collection<T> list) {
+    public void mergeList(Collection<T> list) {
         for (T t : list) {
             getHibernateTemplate().merge(t);
         }
     }
 
+    @Transactional
+    public void saveList(Collection<T> list) {
+        for (T t : list) {
+            getHibernateTemplate().save(t);
+        }
+    }
 
     @Transactional
     public T create(T entity) {
@@ -56,5 +63,23 @@ public class AbstractDAO<T extends CommonEntity> extends HibernateDaoSupport {
             return (T) list.get(0);
         }
         return null;
+    }
+
+    protected StringBuilder getWhereFiltering(List<Filtering> filteringList) {
+        StringBuilder stringBuilder = new StringBuilder("");
+        if (filteringList != null && !filteringList.isEmpty()) {
+            stringBuilder.append(" WHERE ");
+            for (Filtering filtering : filteringList) {
+                String relation = "";
+                if (filtering.getRelationWithPrevious() != null) {
+                    relation = filtering.getRelationWithPrevious();
+                }
+                stringBuilder.append(" ").append(relation).append(" ")
+                        .append(filtering.getColumnName()).append(" ")
+                        .append(filtering.getOperator()).append(" ")
+                        .append(filtering.getValue()).append(" ");
+            }
+        }
+        return stringBuilder;
     }
 }

@@ -73,8 +73,8 @@ public class ExternalSourceCaller {
                     resultList.add(event);
                 }
             }
-//            trackDAO.saveList(trackSet);
-//            eventDAO.saveList(resultList);
+//            trackDAO.mergeList(trackSet);
+//            eventDAO.mergeList(resultList);
             logger.info("Finish fetching external event data. Executed " + requestCount + " requests to external source.");
             return resultList;
         } catch (Exception e) {
@@ -104,7 +104,7 @@ public class ExternalSourceCaller {
             }
         }
         logger.info("Finish fetching external race data for event: " + event.getId());
-//        raceDAO.saveList(raceList);
+//        raceDAO.mergeList(raceList);
         return raceList;
     }
 
@@ -135,7 +135,7 @@ public class ExternalSourceCaller {
             }
         }
         logger.info("Finish fetching external StartPosition data for Race: " + race.getId());
-//        startPositionDAO.saveList(startPositionList);
+//        startPositionDAO.mergeList(startPositionList);
         return startPositionList;
     }
 
@@ -157,16 +157,16 @@ public class ExternalSourceCaller {
     public void loadDataOnStartup() {
         /*List<Event> eventList = requestEventList();
         Set<Track> trackSet = getTrackSet();
-        trackDAO.saveList(trackSet);
-        eventDAO.saveList(eventList);*/
+        trackDAO.mergeList(trackSet);
+        eventDAO.mergeList(eventList);*/
     }
 
     @Scheduled(cron = "0 0 3 * * *")
     public void fetchAndSaveEvents() {
         logger.info("Start scheduled fetching external data.");
         List<Event> eventList = requestEventList();
-        trackDAO.saveList(trackSet);
-        eventDAO.saveList(eventList);
+        trackDAO.mergeList(trackSet);
+        eventDAO.mergeList(eventList);
         List<Users> adminList = new ArrayList<>();
         for(Track track : trackSet) {
             Users users = new Users();
@@ -177,7 +177,7 @@ public class ExternalSourceCaller {
             users.setEnabled(false);
             adminList.add(users);
         }
-        userDAO.saveList(adminList);
+        userDAO.mergeList(adminList);
         logger.info("Finish scheduled fetching external data.");
     }
 }

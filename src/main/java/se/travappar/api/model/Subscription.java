@@ -7,29 +7,49 @@ import java.util.List;
 @Table(name = "Subscription")
 public class Subscription implements CommonEntity {
 
-    Users user;
-    List<Track> trackList;
+    String deviceId;
+    Long trackId;
 
     public Subscription() {
     }
 
     @Id
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "device_id", nullable = false)
-    public Users getUser() {
-        return user;
+    @Column(name = "device_id", nullable = false)
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public void setUser(Users users) {
-        this.user = users;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
-    @OneToMany(fetch = FetchType.EAGER)
-    public List<Track> getTrackList() {
-        return trackList;
+    @Id
+    @Column(name = "track_id", nullable = false)
+    public Long getTrackId() {
+        return trackId;
     }
 
-    public void setTrackList(List<Track> trackList) {
-        this.trackList = trackList;
+    public void setTrackId(Long trackId) {
+        this.trackId = trackId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Subscription that = (Subscription) o;
+
+        if (deviceId != null ? !deviceId.equals(that.deviceId) : that.deviceId != null) return false;
+        if (trackId != null ? !trackId.equals(that.trackId) : that.trackId != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = deviceId != null ? deviceId.hashCode() : 0;
+        result = 31 * result + (trackId != null ? trackId.hashCode() : 0);
+        return result;
     }
 }

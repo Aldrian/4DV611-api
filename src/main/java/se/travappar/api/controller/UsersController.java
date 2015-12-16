@@ -37,6 +37,7 @@ public class UsersController {
         logger.info("Getting user list Executed on /");
         CurrentUser currentUser = (CurrentUser) ((Authentication) principal).getPrincipal();
         if (!UserRole.ROLE_SUPER_ADMIN.equals(currentUser.getRole())) {
+            logger.info("User has no rights to access this resource");
             return new ResponseEntity<>("User has no rights to access this resource", HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(userDAO.getList(new ArrayList<>()), HttpStatus.OK);
@@ -80,6 +81,7 @@ public class UsersController {
         try {
             responseEntity = new ResponseEntity<>(userDAO.create(user), HttpStatus.OK);
         } catch (RuntimeException e) {
+            logger.info("Creating user exception " + e);
             Throwable rootCause = ((DataIntegrityViolationException) e).getRootCause();
             if(rootCause.getMessage().contains("duplicate key")) {
                 responseEntity = new ResponseEntity<>("DeviceID is already in use.", HttpStatus.BAD_REQUEST);

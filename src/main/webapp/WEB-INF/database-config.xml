@@ -27,6 +27,9 @@
     <bean id="userDao" class="se.travappar.api.dal.impl.UserDAO">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
+    <bean id="subscriptionDAO" class="se.travappar.api.dal.impl.SubscriptionDAO">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
     <bean id="raceDao" class="se.travappar.api.dal.impl.RaceDAO">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>

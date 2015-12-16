@@ -25,7 +25,7 @@ public class Event implements CommonEntity {
     String offer;
     Track track;
     List<Race> raceList;
-    Boolean published;
+    Boolean published = false;
 
     public Event() {
     }
