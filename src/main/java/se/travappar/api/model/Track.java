@@ -17,6 +17,7 @@ public class Track implements CommonEntity {
     String name;
     String address;
     String about;
+    Integer segmentId;
 
     public Track() {
     }
@@ -56,6 +57,15 @@ public class Track implements CommonEntity {
 
     public void setAbout(String about) {
         this.about = about;
+    }
+
+    @Column(name = "segment_id")
+    public Integer getSegmentId() {
+        return segmentId;
+    }
+
+    public void setSegmentId(Integer segmentId) {
+        this.segmentId = segmentId;
     }
 
     @Override
