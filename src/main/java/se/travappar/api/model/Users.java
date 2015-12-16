@@ -16,6 +16,7 @@ public class Users implements CommonEntity {
     String username;
     String password;
     String deviceId;
+    String onesignalId;
     String role;
     Long trackId;
     Boolean enabled;
@@ -98,6 +99,14 @@ public class Users implements CommonEntity {
 
     public String getLeid() {
         return leid;
+    }
+
+    public String getOnesignalId() {
+        return onesignalId;
+    }
+
+    public void setOnesignalId(String onesignalId) {
+        this.onesignalId = onesignalId;
     }
 
     public void setLeid(String leid) {

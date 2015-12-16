@@ -11,7 +11,7 @@ import se.travappar.api.dal.impl.TrackDAO;
 import se.travappar.api.model.Event;
 import se.travappar.api.model.HelloWorld;
 import se.travappar.api.model.Track;
-import se.travappar.api.utils.publish.PublishEventHelper;
+import se.travappar.api.utils.publish.OneSignalHelper;
 
 import java.util.Date;
 
@@ -21,7 +21,7 @@ public class HelloWorldController {
     @Autowired
     EventDAO eventDAO;
     @Autowired
-    PublishEventHelper publishEventHelper;
+    OneSignalHelper oneSignalHelper;
     @Autowired
     TrackDAO trackDAO;
     @Autowired

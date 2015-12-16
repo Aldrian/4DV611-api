@@ -1,4 +1,4 @@
-package se.travappar.api.utils.publish;
+package se.travappar.api.utils.publish.mailchimp;
 
 import com.ecwid.mailchimp.MailChimpClient;
 import com.ecwid.mailchimp.MailChimpException;
@@ -14,7 +14,6 @@ import se.travappar.api.model.Track;
 import se.travappar.api.model.UserRole;
 import se.travappar.api.model.Users;
 import se.travappar.api.model.filter.Filtering;
-import se.travappar.api.utils.publish.mailchimp.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -39,8 +38,8 @@ public class MailChimpHelper {
         subscribeMethod.id = mailChimpListId;
         subscribeMethod.email = new Email();
         subscribeMethod.email.email = user.getEmail();
-        subscribeMethod.email.leid = user.getDeviceId();
-        subscribeMethod.email.euid = user.getDeviceId();
+        subscribeMethod.email.leid = user.getLeid();
+        subscribeMethod.email.euid = user.getEuid();
         subscribeMethod.double_optin = false;
         subscribeMethod.update_existing = true;
         subscribeMethod.merge_vars = new MergeVars(user.getEmail());

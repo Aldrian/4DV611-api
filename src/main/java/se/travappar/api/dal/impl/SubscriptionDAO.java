@@ -27,16 +27,4 @@ public class SubscriptionDAO extends AbstractDAO<Subscription> {
         transaction.commit();
         session.close();
     }
-
-    public List<Users> getSubscribers(Long trackId) {
-        List<Subscription> subscriptionList = (List<Subscription>) getHibernateTemplate().find("from " + Subscription.class.getSimpleName() + " where track_id=?", trackId);
-        List<Users> userList = new ArrayList<>();
-        for(Subscription subscription : subscriptionList) {
-            List<Users> users = (List<Users>) getHibernateTemplate().find("from Users where device_id=?", subscription.getDeviceId());
-            if(!users.isEmpty()) {
-                userList.add(users.get(0));
-            }
-        }
-        return userList;
-    }
 }

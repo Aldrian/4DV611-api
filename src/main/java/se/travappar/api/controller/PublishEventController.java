@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import se.travappar.api.dal.impl.EventDAO;
 import se.travappar.api.model.Event;
 import se.travappar.api.utils.ImageHelper;
-import se.travappar.api.utils.publish.PublishEventHelper;
+import se.travappar.api.utils.publish.OneSignalHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MediaType;
@@ -21,7 +21,7 @@ public class PublishEventController {
     @Autowired
     ImageHelper imageHelper;
     @Autowired
-    PublishEventHelper publishEventHelper;
+    OneSignalHelper oneSignalHelper;
     @Autowired
     EventDAO eventDAO;
     private static final Logger logger = LogManager.getLogger(PublishEventController.class);
@@ -48,9 +48,9 @@ public class PublishEventController {
         }
         if (event.getPublished()) {
             try {
-                // TODO publish
+                oneSignalHelper.sendEventNotification(event);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Error while sending notifications", e);
             }
         }
         return new ResponseEntity<Event>(eventDAO.update(event), HttpStatus.OK);
