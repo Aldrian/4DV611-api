@@ -80,6 +80,10 @@ public class UsersController {
         if (user.getEnabled() == null) {
             user.setEnabled(true);
         }
+        if(UserRole.getByCode(user.getRole()) == UserRole.ROLE_USER) {
+            user.setUsername(user.getDeviceId());
+            user.setPassword(user.getDeviceId());
+        }
         ResponseEntity<?> responseEntity = null;
         try {
             responseEntity = new ResponseEntity<>(userDAO.create(user), HttpStatus.OK);
