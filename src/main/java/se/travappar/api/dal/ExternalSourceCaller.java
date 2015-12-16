@@ -13,6 +13,7 @@ import se.travappar.api.model.*;
 import se.travappar.api.model.external.ExternalEvent;
 import se.travappar.api.model.external.ExternalRace;
 import se.travappar.api.model.external.ExternalStartList;
+import se.travappar.api.utils.publish.MailChimpHelper;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -34,6 +35,8 @@ public class ExternalSourceCaller {
     TrackDAO trackDAO;
     @Autowired
     UserDAO userDAO;
+    @Autowired
+    MailChimpHelper mailChimpHelper;
 
     Long norwayTrackId = 77L;
     Long requestCount = 0L;
@@ -179,5 +182,19 @@ public class ExternalSourceCaller {
         }
         userDAO.mergeList(adminList);
         logger.info("Finish scheduled fetching external data.");
+    }
+
+    @Scheduled(cron = "0 0 4 * * *")
+    public void refreshMailChimpData() {
+        logger.info("Start refreshMailChimpData.");
+        try {
+            List<Track> trackList = trackDAO.getList(new ArrayList<>());
+            mailChimpHelper.refreshAndPairTrackSegments(trackList);
+            trackDAO.mergeList(trackList);
+            mailChimpHelper.subscribeUsersToSegments();
+        } catch (Exception e) {
+            logger.info("Error refreshMailChimpData.", e);
+        }
+        logger.info("Finish refreshMailChimpData.");
     }
 }
