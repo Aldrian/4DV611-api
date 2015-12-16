@@ -11,6 +11,8 @@ import javax.persistence.Table;
 public class Users implements CommonEntity {
 
     String email;
+    String euid;
+    String leid;
     String username;
     String password;
     String deviceId;
@@ -84,5 +86,21 @@ public class Users implements CommonEntity {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getEuid() {
+        return euid;
+    }
+
+    public void setEuid(String euid) {
+        this.euid = euid;
+    }
+
+    public String getLeid() {
+        return leid;
+    }
+
+    public void setLeid(String leid) {
+        this.leid = leid;
     }
 }
