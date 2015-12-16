@@ -31,6 +31,8 @@
     <!-- /Http Json MessageConverter -->
 
     <bean id="externalSourceCaller" class="se.travappar.api.dal.ExternalSourceCaller"/>
+    <bean id="publishEventHelper" class="se.travappar.api.utils.publish.PublishEventHelper"/>
+    <bean id="emailSubscriptionHelper" class="se.travappar.api.utils.publish.MailChimpHelper"/>
     <bean id="imageHelper" class="se.travappar.api.utils.ImageHelper"/>
 
     <task:annotation-driven executor="executor" scheduler="scheduler"/>
