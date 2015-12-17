@@ -37,12 +37,12 @@ public class OneSignalHelper {
     }
 
     public void updateDeviceFlags(Users users, HashMap<String, String> tags) throws IOException {
-        if(users.getOnesignalId() != null) {
+        if(users.getOneSignalId() != null) {
             DeviceRequest deviceRequest = new DeviceRequest();
             deviceRequest.setApp_id(appId);
-            deviceRequest.setId(users.getOnesignalId());
+            deviceRequest.setId(users.getOneSignalId());
             deviceRequest.setTags(tags);
-            runQuery("https://onesignal.com/api/v1/players/" + users.getOnesignalId(), "PUT", mapper.writeValueAsString(deviceRequest));
+            runQuery("https://onesignal.com/api/v1/players/" + users.getOneSignalId(), "PUT", mapper.writeValueAsString(deviceRequest));
         }
     }
 
