@@ -16,12 +16,14 @@ import se.travappar.api.model.filter.Filtering;
 import se.travappar.api.utils.ImageHelper;
 import se.travappar.api.utils.security.CurrentUser;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MediaType;
 import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/events")
@@ -47,7 +49,7 @@ public class EventController {
         List<Filtering> filteringList = new ArrayList<>();
         if (fromDate.isPresent()) {
             try {
-                Date date = dateFormat.parse(fromDate.get());
+                dateFormat.parse(fromDate.get());
                 Filtering dateFilter = new Filtering("date", ">=", "'" + fromDate.get() + "'", "AND");
                 filteringList.add(dateFilter);
             } catch (ParseException e) {
@@ -124,7 +126,7 @@ public class EventController {
             MediaType.TEXT_PLAIN})
     public
     @ResponseBody
-    ResponseEntity<Event> updateEvent(HttpServletRequest request, @RequestBody Event event) {
+    ResponseEntity updateEvent(@RequestBody Event event) {
         logger.info("Update event executed on / with event with id=" + event.getId());
         if (event.getOfferImageSource() != null) {
             try {
@@ -133,11 +135,11 @@ public class EventController {
             } catch (Exception e) {
                 logger.error("Error while saving image", e);
                 if (e instanceof RuntimeException) {
-                    return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
                 }
-                return new ResponseEntity<Event>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
-        return new ResponseEntity<Event>(eventDAO.update(event), HttpStatus.OK);
+        return new ResponseEntity<>(eventDAO.update(event), HttpStatus.OK);
     }
 }

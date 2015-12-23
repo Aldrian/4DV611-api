@@ -46,13 +46,14 @@ public class ExternalSourceCaller {
 
     Set<Track> trackSet = new HashSet<>();
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final String EXTERNAL_SERVER_HOST = "http://178.62.191.16:8080/";
     private static final Logger logger = LogManager.getLogger(ExternalSourceCaller.class);
 
     public List<Event> requestEventList() {
         requestCount = 0L;
         try {
             logger.info("Start fetching external event data.");
-            String body = runQuery("http://178.62.191.16:8080/collector/collectorserver?ACTION=TRMEDIA_START_V2&JSON=1");
+            String body = runQuery(EXTERNAL_SERVER_HOST + "collector/collectorserver?ACTION=TRMEDIA_START_V2&JSON=1");
             ExternalEvent externalEventHolder = mapper.readValue(body, ExternalEvent.class);
             List<Event> resultList = new ArrayList<>();
             if (externalEventHolder.getTrackInfoArray() != null && externalEventHolder.getTrackInfoArray().getTracks() != null && externalEventHolder.getTrackInfoArray().getTracks().getEvents() != null) {
@@ -69,15 +70,12 @@ public class ExternalSourceCaller {
 
                     Event event = new Event();
                     event.setId(externalEvent.getId());
-//                    event.setName(externalEvent.getTrack()); // TODO
                     event.setDate(externalEvent.getFirstracetime());
                     event.setTrack(track);
                     event.setRaceList(getRaceList(track, event));
                     resultList.add(event);
                 }
             }
-//            trackDAO.mergeList(trackSet);
-//            eventDAO.mergeList(resultList);
             logger.info("Finish fetching external event data. Executed " + requestCount + " requests to external source.");
             return resultList;
         } catch (Exception e) {
@@ -89,7 +87,7 @@ public class ExternalSourceCaller {
     private List<Race> getRaceList(Track track, Event event) throws IOException {
         logger.info("Start fetching external race data for event: " + event.getId());
         List<Race> raceList = new ArrayList<>();
-        String body = runQuery("http://178.62.191.16:8080/collector/collectorserver?ACTION=GETRACES&DATE=" + dateFormat.format(event.getDate()) + "&TRACKID=" + track.getId() + "&JSON=1");
+        String body = runQuery(EXTERNAL_SERVER_HOST + "collector/collectorserver?ACTION=GETRACES&DATE=" + dateFormat.format(event.getDate()) + "&TRACKID=" + track.getId() + "&JSON=1");
         ExternalRace externalRaceHolder = mapper.readValue(body, ExternalRace.class);
         if (externalRaceHolder != null && externalRaceHolder.getRaces() != null) {
             for (ExternalRace.Race externalRace : externalRaceHolder.getRaces()) {
@@ -107,14 +105,13 @@ public class ExternalSourceCaller {
             }
         }
         logger.info("Finish fetching external race data for event: " + event.getId());
-//        raceDAO.mergeList(raceList);
         return raceList;
     }
 
     private List<StartPosition> getStartList(Track track, Event event, Race race) throws IOException {
         logger.info("Start fetching external StartPosition data for Race: " + race.getId());
         List<StartPosition> startPositionList = new ArrayList<>();
-        String body = runQuery("http://178.62.191.16:8080//collector/collectorserver?ACTION=GETRACEINFO&DATE=" + dateFormat.format(event.getDate()) + "&TRACKID=" + track.getId() + "&RACENBR=" + race.getNumber() + "&JSON=1");
+        String body = runQuery(EXTERNAL_SERVER_HOST + "/collector/collectorserver?ACTION=GETRACEINFO&DATE=" + dateFormat.format(event.getDate()) + "&TRACKID=" + track.getId() + "&RACENBR=" + race.getNumber() + "&JSON=1");
         ExternalStartList externalStartListHolder = mapper.readValue(body, ExternalStartList.class);
         if (externalStartListHolder != null
                 && externalStartListHolder.getRaceInfoArray() != null
@@ -138,7 +135,6 @@ public class ExternalSourceCaller {
             }
         }
         logger.info("Finish fetching external StartPosition data for Race: " + race.getId());
-//        startPositionDAO.mergeList(startPositionList);
         return startPositionList;
     }
 
@@ -193,7 +189,8 @@ public class ExternalSourceCaller {
             trackDAO.mergeList(trackList);
             mailChimpHelper.subscribeUsersToSegments();
         } catch (Exception e) {
-            logger.info("Error refreshMailChimpData.", e);
+            logger.info("Error refreshMailChimpData. ", e);
+            return;
         }
         logger.info("Finish refreshMailChimpData.");
     }

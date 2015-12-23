@@ -11,7 +11,6 @@ import se.travappar.api.model.Event;
 import se.travappar.api.utils.ImageHelper;
 import se.travappar.api.utils.publish.OneSignalHelper;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MediaType;
 
 @RestController
@@ -32,7 +31,7 @@ public class PublishEventController {
             MediaType.TEXT_PLAIN})
     public
     @ResponseBody
-    ResponseEntity<Event> updateEvent(HttpServletRequest request, @RequestBody Event event) {
+    ResponseEntity updateEvent(@RequestBody Event event) {
         logger.info("Update event executed on / with event with id=" + event.getId());
         if (event.getOfferImageSource() != null) {
             try {
@@ -41,9 +40,9 @@ public class PublishEventController {
             } catch (Exception e) {
                 logger.error("Error while saving image", e);
                 if (e instanceof RuntimeException) {
-                    return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
                 }
-                return new ResponseEntity<Event>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
         if (event.getPublished()) {
@@ -51,6 +50,7 @@ public class PublishEventController {
                 oneSignalHelper.sendEventNotification(event);
             } catch (Exception e) {
                 logger.error("Error while sending notifications", e);
+                return new ResponseEntity<>("Error while sending notifications: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
         return new ResponseEntity<Event>(eventDAO.update(event), HttpStatus.OK);
