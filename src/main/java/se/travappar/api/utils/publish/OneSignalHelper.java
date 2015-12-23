@@ -3,6 +3,7 @@ package se.travappar.api.utils.publish;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMethod;
 import se.travappar.api.dal.impl.SubscriptionDAO;
 import se.travappar.api.model.Event;
 import se.travappar.api.model.Users;
@@ -17,6 +18,9 @@ public class OneSignalHelper {
 
     private static final String appId = "4c3907a3-0097-46c1-8059-21da20736620";
     private static final String authToken = "NzgwYWU4NzAtZjQwMS00NWM4LTk4NjAtYjcwY2ZkYmVjMjRh";
+    private final String NOTIFICATION_URL = "https://onesignal.com/api/v1/notifications";
+    private final String PLAYER_URL = "https://onesignal.com/api/v1/players/";
+
     OkHttpClient client = new OkHttpClient();
     ObjectMapper mapper = new ObjectMapper();
 
@@ -31,18 +35,20 @@ public class OneSignalHelper {
         data.put("eventId", event.getId().toString());
         notificationRequest.setData(data);
         HashMap<String, String> contents = new HashMap<>();
-        contents.put("en", "New event on " + event.getTrack().getName() + " was published. Tap to open.");
+        contents.put("en", "New event on " + event.getTrack().getName() + " has been published. Tap to open.");
         notificationRequest.setContents(contents);
-        runQuery("https://onesignal.com/api/v1/notifications", "POST", mapper.writeValueAsString(notificationRequest));
+        runQuery(NOTIFICATION_URL, RequestMethod.POST.toString(), mapper.writeValueAsString(notificationRequest));
     }
 
     public void updateDeviceFlags(Users users, HashMap<String, String> tags) throws IOException {
-        if(users.getOneSignalId() != null) {
+        if (users.getOneSignalId() != null) {
             DeviceRequest deviceRequest = new DeviceRequest();
             deviceRequest.setApp_id(appId);
             deviceRequest.setId(users.getOneSignalId());
+            tags.put("All", "true");
+            tags.put("Free User", "true");
             deviceRequest.setTags(tags);
-            runQuery("https://onesignal.com/api/v1/players/" + users.getOneSignalId(), "PUT", mapper.writeValueAsString(deviceRequest));
+            runQuery(PLAYER_URL + users.getOneSignalId(), RequestMethod.PUT.toString(), mapper.writeValueAsString(deviceRequest));
         }
     }
 
