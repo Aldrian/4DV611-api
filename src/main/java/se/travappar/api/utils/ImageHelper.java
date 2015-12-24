@@ -12,7 +12,7 @@ public class ImageHelper {
 
     private static final Logger logger = LogManager.getLogger(ImageHelper.class);
 //    public static final String PATHNAME = "G:\\Tools\\apache-tomcat-8.0.28\\img\\";
-    public static final String PATHNAME = "/home/zayats/img/";
+    public static final String PATHNAME = "/home/zayats/images/";
     public static final String IMAGE_URL = "http://46.101.168.154:8080/static/";
 
     public String saveOfferImage(String imageSource, String eventID) throws IOException {
