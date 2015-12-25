@@ -6,7 +6,6 @@ import java.util.HashMap;
 public class DeviceRequest implements Serializable {
     String app_id;
     String id;
-    String identifier;
     HashMap<String, String> tags;
 
     public DeviceRequest() {
@@ -26,14 +25,6 @@ public class DeviceRequest implements Serializable {
 
     public void setTags(HashMap<String, String> tags) {
         this.tags = tags;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
     }
 
     public String getId() {
