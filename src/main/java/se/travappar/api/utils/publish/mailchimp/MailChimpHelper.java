@@ -3,8 +3,10 @@ package se.travappar.api.utils.publish.mailchimp;
 import com.ecwid.mailchimp.MailChimpClient;
 import com.ecwid.mailchimp.MailChimpException;
 import com.ecwid.mailchimp.MailChimpObject;
+import com.ecwid.mailchimp.method.v2_0.lists.DummyResult;
 import com.ecwid.mailchimp.method.v2_0.lists.Email;
 import com.ecwid.mailchimp.method.v2_0.lists.SubscribeMethod;
+import com.ecwid.mailchimp.method.v2_0.lists.UnsubscribeMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.travappar.api.dal.impl.SubscriptionDAO;
 import se.travappar.api.dal.impl.TrackDAO;
@@ -48,6 +50,20 @@ public class MailChimpHelper {
         user.setLeid(result.leid);
         mailChimpClient.close();
         return user;
+    }
+
+    public void unSubscribeUserFromList(Users user) throws IOException, MailChimpException {
+        MailChimpClient mailChimpClient = new MailChimpClient();
+        UnsubscribeMethod unSubscribeMethod = new UnsubscribeMethod();
+        unSubscribeMethod.apikey = mailChimpApiKey;
+        unSubscribeMethod.id = mailChimpListId;
+        unSubscribeMethod.email = new Email();
+        unSubscribeMethod.email.email = user.getEmail();
+        unSubscribeMethod.email.leid = user.getLeid();
+        unSubscribeMethod.email.euid = user.getEuid();
+        unSubscribeMethod.delete_member = true;
+        DummyResult result = mailChimpClient.execute(unSubscribeMethod);
+        mailChimpClient.close();
     }
 
     public List<Track> refreshAndPairTrackSegments(List<Track> trackList) throws IOException, MailChimpException {

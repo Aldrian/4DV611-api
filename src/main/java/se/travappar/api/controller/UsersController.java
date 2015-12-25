@@ -106,8 +106,17 @@ public class UsersController {
     public
     ResponseEntity updateUser(@RequestBody Users user) {
         logger.info("Update user executed on / with user with device_id=" + user.getDeviceId());
+        Users oldUser = userDAO.get(user.getDeviceId());
+        if(oldUser.getEmail() != null && !oldUser.getEmail().isEmpty() && !oldUser.getEmail().equals(user.getEmail())) {
+            try {
+                mailChimpHelper.unSubscribeUserFromList(oldUser);
+            } catch (Exception e) {
+                logger.info("Error while unsubscribing user from MailChimp list. " + oldUser.getDeviceId(), e);
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
         Users updatedUser = userDAO.update(user);
-        if(updatedUser.getEmail() != null) {
+        if(updatedUser.getEmail() != null && !updatedUser.getEmail().isEmpty()) {
             try {
                 Users users = mailChimpHelper.subscribeUserToList(updatedUser);
                 updatedUser = userDAO.update(users);
