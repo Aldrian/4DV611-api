@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import se.travappar.api.dal.impl.*;
 import se.travappar.api.model.*;
+import se.travappar.api.model.enums.UserRole;
 import se.travappar.api.model.external.ExternalEvent;
 import se.travappar.api.model.external.ExternalRace;
 import se.travappar.api.model.external.ExternalStartList;

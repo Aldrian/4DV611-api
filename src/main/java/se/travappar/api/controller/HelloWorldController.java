@@ -7,13 +7,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import se.travappar.api.dal.ExternalSourceCaller;
 import se.travappar.api.dal.impl.EventDAO;
+import se.travappar.api.dal.impl.OfferDAO;
 import se.travappar.api.dal.impl.TrackDAO;
-import se.travappar.api.model.Event;
-import se.travappar.api.model.HelloWorld;
-import se.travappar.api.model.Track;
+import se.travappar.api.dal.impl.UserDAO;
+import se.travappar.api.model.*;
+import se.travappar.api.model.enums.OfferType;
 import se.travappar.api.utils.publish.OneSignalHelper;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 public class HelloWorldController {
@@ -21,9 +24,13 @@ public class HelloWorldController {
     @Autowired
     EventDAO eventDAO;
     @Autowired
+    OfferDAO offerDAO;
+    @Autowired
     OneSignalHelper oneSignalHelper;
     @Autowired
     TrackDAO trackDAO;
+    @Autowired
+    UserDAO userDAO;
     @Autowired
     ExternalSourceCaller externalSourceCaller;
 
@@ -54,6 +61,23 @@ public class HelloWorldController {
         helloWorld.setField("Hello World!");
         externalSourceCaller.refreshMailChimpData();
         return helloWorld;
+    }
+
+    @RequestMapping(value = "/testOffer", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Offer testOffer() {
+        HelloWorld helloWorld = new HelloWorld();
+        helloWorld.setField("Hello World!");
+        List<Track> list = trackDAO.getList(new ArrayList<>());
+        List<Users> userLIst = userDAO.getList(new ArrayList<>());
+        Offer offer = new Offer();
+        offer.setDeviceId(userLIst.get(3).getDeviceId());
+        offer.setTrackId(list.get(1).getId());
+        offer.setOfferType(OfferType.FREE_ENTRANCE.getCode());
+        offer.setDescription("SOme offer description");
+        Offer offerResult = offerDAO.create(offer);
+        return offerResult;
     }
 
     @RequestMapping(value = "/helloworldCreate", method = RequestMethod.GET)

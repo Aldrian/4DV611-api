@@ -3,7 +3,7 @@ package se.travappar.api.utils.security;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import se.travappar.api.model.UserRole;
+import se.travappar.api.model.enums.UserRole;
 import se.travappar.api.model.Users;
 
 import java.util.Arrays;

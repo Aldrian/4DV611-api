@@ -1,4 +1,4 @@
-package se.travappar.api.model;
+package se.travappar.api.model.enums;
 
 public enum UserRole {
     ROLE_SUPER_ADMIN("0"),

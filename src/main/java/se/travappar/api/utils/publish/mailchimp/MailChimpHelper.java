@@ -13,7 +13,7 @@ import se.travappar.api.dal.impl.TrackDAO;
 import se.travappar.api.dal.impl.UserDAO;
 import se.travappar.api.model.Subscription;
 import se.travappar.api.model.Track;
-import se.travappar.api.model.UserRole;
+import se.travappar.api.model.enums.UserRole;
 import se.travappar.api.model.Users;
 import se.travappar.api.model.filter.Filtering;
 
