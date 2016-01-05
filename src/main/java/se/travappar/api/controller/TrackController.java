@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.travappar.api.dal.impl.OfferDAO;
 import se.travappar.api.dal.impl.TrackDAO;
+import se.travappar.api.model.Offer;
 import se.travappar.api.model.Track;
 
 import javax.ws.rs.core.MediaType;
@@ -19,6 +21,8 @@ public class TrackController {
 
     @Autowired
     TrackDAO trackDAO;
+    @Autowired
+    OfferDAO offerDAO;
     private static final Logger logger = LogManager.getLogger(TrackController.class);
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -43,6 +47,15 @@ public class TrackController {
     Track getTrack(@PathVariable long id) {
         logger.info("Getting track executed on / with id=" + id);
         return trackDAO.get(id);
+    }
+
+    @RequestMapping(value = "/{id}/offers", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    ResponseEntity<?> getTrackOffers(@PathVariable long id) {
+        logger.info("Getting offer list for track " + id);
+        List<Offer> userOfferList = offerDAO.getTrackOfferList(id);
+        return new ResponseEntity<List<Offer>>(userOfferList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
