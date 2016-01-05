@@ -31,11 +31,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TrackControllerTest {
 
     @Autowired
+    TrackDAO trackDAO;
+    @Autowired
     private WebApplicationContext webApplicationContext;
     private MockMvc mockMvc;
-    @Autowired
-    TrackDAO trackDAO;
-
     private int lastID;
 
     @Before
@@ -61,6 +60,14 @@ public class TrackControllerTest {
     @Test
     public void getTrackList() throws Exception {
         mockMvc.perform(get("/tracks/"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andDo(print());
+    }
+
+    @Test
+    public void getTrackListRoot() throws Exception {
+        mockMvc.perform(get("/tracks"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print());

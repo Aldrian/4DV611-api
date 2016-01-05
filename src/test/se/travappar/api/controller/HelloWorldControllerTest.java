@@ -45,5 +45,10 @@ public class HelloWorldControllerTest {
     public void testExternal() throws Exception {
         mockMvc.perform(get("/testExternal")).andExpect(status().isOk());
     }
+
+    @Test
+    public void testPair() throws Exception {
+        mockMvc.perform(get("/testPair")).andExpect(status().isOk());
+    }
 }
 
