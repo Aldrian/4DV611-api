@@ -50,7 +50,7 @@ public class Track implements CommonEntity {
         this.address = address;
     }
 
-    @Column(name = "about")
+    @Column(name = "about", columnDefinition="text", length = 1000)
     public String getAbout() {
         return about;
     }

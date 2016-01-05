@@ -58,7 +58,7 @@ public class Event implements CommonEntity {
         this.offerImage = offerImage;
     }
 
-    @Column(name = "offer")
+    @Column(name = "offer", columnDefinition="text", length = 500)
     public String getOffer() {
         return offer;
     }
@@ -77,7 +77,7 @@ public class Event implements CommonEntity {
         this.track = track;
     }
 
-    @Column(name = "highlight")
+    @Column(name = "highlight", columnDefinition="text", length = 1000)
     public String getHighlight() {
         return highlight;
     }
@@ -95,7 +95,7 @@ public class Event implements CommonEntity {
         this.published = published;
     }
 
-    @Column(name = "homeTeam")
+    @Column(name = "homeTeam", columnDefinition="text", length = 500)
     public String getHomeTeam() {
         return homeTeam;
     }
