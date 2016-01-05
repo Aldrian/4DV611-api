@@ -33,6 +33,9 @@
     <bean id="raceDao" class="se.travappar.api.dal.impl.RaceDAO">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
+    <bean id="offerDAO" class="se.travappar.api.dal.impl.OfferDAO">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
     <bean id="startPositionDao" class="se.travappar.api.dal.impl.StartPositionDAO">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>

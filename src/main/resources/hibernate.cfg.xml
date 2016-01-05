@@ -13,6 +13,7 @@
         <mapping class="se.travappar.api.model.StartPosition"/>
         <mapping class="se.travappar.api.model.Track"/>
         <mapping class="se.travappar.api.model.Users"/>
+        <mapping class="se.travappar.api.model.Offer"/>
         <mapping class="se.travappar.api.model.Subscription"/>
     </session-factory>
 </hibernate-configuration>
