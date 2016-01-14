@@ -8,8 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.travappar.api.dal.impl.OfferDAO;
 import se.travappar.api.dal.impl.TrackDAO;
+import se.travappar.api.dal.impl.VisitDAO;
 import se.travappar.api.model.Offer;
 import se.travappar.api.model.Track;
+import se.travappar.api.model.Visit;
 
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
@@ -23,6 +25,8 @@ public class TrackController {
     TrackDAO trackDAO;
     @Autowired
     OfferDAO offerDAO;
+    @Autowired
+    VisitDAO visitDAO;
     private static final Logger logger = LogManager.getLogger(TrackController.class);
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -56,6 +60,15 @@ public class TrackController {
         logger.info("Getting offer list for track " + id);
         List<Offer> userOfferList = offerDAO.getTrackOfferList(id);
         return new ResponseEntity<List<Offer>>(userOfferList, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{id}/visits", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    ResponseEntity<?> getTrackVisits(@PathVariable long id) {
+        logger.info("Getting offer list for track " + id);
+        List<Visit> trackVisitList = visitDAO.getTrackVisitList(id);
+        return new ResponseEntity<List<Visit>>(trackVisitList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
