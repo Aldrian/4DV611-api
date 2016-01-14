@@ -68,7 +68,7 @@ public class Event implements CommonEntity {
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @Cascade({CascadeType.SAVE_UPDATE, CascadeType.MERGE, CascadeType.PERSIST})
+    @Cascade({CascadeType.SAVE_UPDATE, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     public Track getTrack() {
         return track;
     }

@@ -40,6 +40,7 @@ public class ExternalSourceCaller {
     MailChimpHelper mailChimpHelper;
 
     Long norwayTrackId = 77L;
+    Long denmarkTrackId = 54L;
     Long requestCount = 0L;
 
     OkHttpClient client = new OkHttpClient();
@@ -64,6 +65,8 @@ public class ExternalSourceCaller {
                     track.setId(externalEvent.getTrackId());
                     if (norwayTrackId.equals(externalEvent.getTrackId())) {
                         track.setName("Norway");
+                    } else if (denmarkTrackId.equals(externalEvent.getTrackId())) {
+                        track.setName("Denmark");
                     } else {
                         track.setName(externalEvent.getTrack());
                     }
@@ -165,17 +168,40 @@ public class ExternalSourceCaller {
     public void fetchAndSaveEvents() {
         logger.info("Start scheduled fetching external data.");
         List<Event> eventList = requestEventList();
-        trackDAO.mergeList(trackSet);
+        List<Track> storedTrackList = trackDAO.getList(new ArrayList<>());
+        List<Track> newTrackList = new ArrayList<>();
+        for (Track track : trackSet) {
+            if (!storedTrackList.contains(track)) {
+                newTrackList.add(track);
+            }
+        }
+        trackDAO.saveList(newTrackList);
+        for (Event event : eventList) {
+            Event storedEvent = eventDAO.get(event.getId());
+            if (storedEvent != null) {
+                event.setOfferImage(storedEvent.getOfferImage());
+                event.setOffer(storedEvent.getOffer());
+                event.setHomeTeam(storedEvent.getHomeTeam());
+                event.setName(storedEvent.getName());
+                event.setHighlight(storedEvent.getHighlight());
+                event.setPublished(storedEvent.getPublished());
+                if(storedTrackList.contains(event.getTrack())) {
+                    event.setTrack(storedTrackList.get(storedTrackList.indexOf(event.getTrack())));
+                }
+            }
+        }
         eventDAO.mergeList(eventList);
         List<Users> adminList = new ArrayList<>();
-        for(Track track : trackSet) {
+        for (Track track : trackSet) {
             Users users = new Users();
             users.setRole(UserRole.ROLE_ADMIN.getCode());
             users.setUsername(track.getName().toLowerCase().replace(" ", ""));
             users.setTrackId(track.getId());
             users.setDeviceId(track.getId().toString());
             users.setEnabled(false);
-            adminList.add(users);
+            if (userDAO.get(track.getId().toString()) == null) {
+                adminList.add(users);
+            }
         }
         userDAO.mergeList(adminList);
         logger.info("Finish scheduled fetching external data.");

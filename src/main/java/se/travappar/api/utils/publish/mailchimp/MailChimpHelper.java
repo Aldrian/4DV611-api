@@ -76,10 +76,13 @@ public class MailChimpHelper {
         List<Segment> staticList = segmentsResult.staticList;
         List<Segment> newSegments = new ArrayList<>();
         for (Track track : trackList) {
-            if (getSegmentByName(track.getName(), staticList) == null) {
+            Segment segmentByName = getSegmentByName(track.getName(), staticList);
+            if (segmentByName == null) {
                 Segment segment = new Segment();
                 segment.name = track.getName();
                 newSegments.add(segment);
+            } else {
+                track.setSegmentId(segmentByName.id);
             }
         }
 
