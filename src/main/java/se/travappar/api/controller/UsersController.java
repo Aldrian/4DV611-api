@@ -15,8 +15,10 @@ import se.travappar.api.dal.impl.VisitDAO;
 import se.travappar.api.model.Offer;
 import se.travappar.api.model.Track;
 import se.travappar.api.model.Visit;
+import se.travappar.api.model.enums.OfferType;
 import se.travappar.api.model.enums.UserRole;
 import se.travappar.api.model.Users;
+import se.travappar.api.utils.label.LabelUtils;
 import se.travappar.api.utils.publish.mailchimp.MailChimpHelper;
 import se.travappar.api.utils.security.CurrentUser;
 
@@ -125,6 +127,16 @@ public class UsersController {
             } else {
                 responseEntity = new ResponseEntity<>(e.getMessage() + " : " + rootCause.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
+            return responseEntity;
+        }
+        if(user.getRole().equals(UserRole.ROLE_USER.getCode())) {
+            logger.info("Creating offer for new user.");
+            Offer offer = new Offer();
+            offer.setDeviceId(user.getDeviceId());
+            offer.setOfferType(OfferType.FREE_ENTRANCE.getCode());
+            offer.setDescription(LabelUtils.ANY_TRACK_FREE_ENTRANCE.getMessage());
+            offerDAO.create(offer);
+            logger.info("Offer was created.");
         }
         return responseEntity;
     }
