@@ -9,8 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import se.travappar.api.dal.impl.OfferDAO;
+import se.travappar.api.dal.impl.TrackDAO;
 import se.travappar.api.dal.impl.UserDAO;
+import se.travappar.api.dal.impl.VisitDAO;
 import se.travappar.api.model.Offer;
+import se.travappar.api.model.Track;
+import se.travappar.api.model.Visit;
 import se.travappar.api.model.enums.UserRole;
 import se.travappar.api.model.Users;
 import se.travappar.api.utils.publish.mailchimp.MailChimpHelper;
@@ -29,6 +33,10 @@ public class UsersController {
     UserDAO userDAO;
     @Autowired
     OfferDAO offerDAO;
+    @Autowired
+    TrackDAO trackDAO;
+    @Autowired
+    VisitDAO visitDAO;
     @Autowired
     MailChimpHelper mailChimpHelper;
     private static final Logger logger = LogManager.getLogger(UsersController.class);
@@ -58,9 +66,19 @@ public class UsersController {
     }
 
     @RequestMapping(value = "/{deviceId}/offers", method = RequestMethod.GET)
-    public ResponseEntity<?> getUserOffers(@PathVariable String deviceId) {
+    public ResponseEntity<?> getUserOffers(@PathVariable String deviceId, Principal principal) {
         logger.info("Getting offer list for user " + deviceId);
         List<Offer> userOfferList = offerDAO.getUserOfferList(deviceId);
+        CurrentUser currentUser = (CurrentUser) ((Authentication) principal).getPrincipal();
+        if(currentUser.getRole().equals(UserRole.ROLE_ADMIN)) {
+            logger.info("Creating visit entity for " + deviceId);
+            Track track = trackDAO.get(currentUser.getTrackId());
+            Visit visit = new Visit();
+            visit.setTrack(track);
+            visit.setDeviceId(deviceId);
+            visit = visitDAO.create(visit);
+            logger.info("Visit entity for " + deviceId + " created. Id :" + visit.getId());
+        }
         return new ResponseEntity<List<Offer>>(userOfferList, HttpStatus.OK);
     }
 
