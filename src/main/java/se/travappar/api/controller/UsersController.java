@@ -19,7 +19,7 @@ import se.travappar.api.model.enums.OfferType;
 import se.travappar.api.model.enums.UserRole;
 import se.travappar.api.model.Users;
 import se.travappar.api.utils.label.LabelUtils;
-import se.travappar.api.utils.publish.mailchimp.MailChimpHelper;
+import se.travappar.api.utils.publish.MailChimpHelper;
 import se.travappar.api.utils.security.CurrentUser;
 
 import javax.ws.rs.core.MediaType;

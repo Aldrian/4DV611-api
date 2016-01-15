@@ -1,4 +1,4 @@
-package se.travappar.api.utils.publish.mailchimp;
+package se.travappar.api.utils.publish;
 
 import com.ecwid.mailchimp.MailChimpClient;
 import com.ecwid.mailchimp.MailChimpException;
@@ -16,6 +16,7 @@ import se.travappar.api.model.Track;
 import se.travappar.api.model.enums.UserRole;
 import se.travappar.api.model.Users;
 import se.travappar.api.model.filter.Filtering;
+import se.travappar.api.utils.publish.mailchimp.*;
 
 import java.io.IOException;
 import java.util.*;

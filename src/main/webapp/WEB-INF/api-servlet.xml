@@ -32,7 +32,7 @@
 
     <bean id="externalSourceCaller" class="se.travappar.api.dal.ExternalSourceCaller"/>
     <bean id="publishEventHelper" class="se.travappar.api.utils.publish.OneSignalHelper"/>
-    <bean id="emailSubscriptionHelper" class="se.travappar.api.utils.publish.mailchimp.MailChimpHelper"/>
+    <bean id="emailSubscriptionHelper" class="se.travappar.api.utils.publish.MailChimpHelper"/>
     <bean id="imageHelper" class="se.travappar.api.utils.ImageHelper"/>
 
     <task:annotation-driven executor="executor" scheduler="scheduler"/>

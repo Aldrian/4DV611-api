@@ -14,7 +14,7 @@ import se.travappar.api.model.enums.UserRole;
 import se.travappar.api.model.external.ExternalEvent;
 import se.travappar.api.model.external.ExternalRace;
 import se.travappar.api.model.external.ExternalStartList;
-import se.travappar.api.utils.publish.mailchimp.MailChimpHelper;
+import se.travappar.api.utils.publish.MailChimpHelper;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
