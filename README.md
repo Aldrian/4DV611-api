@@ -127,5 +127,16 @@ To stop Jetty use
 ```se.travappar.api.utils.publish.OneSignalHelper``` contains OneSignal iteraction logic.
 When app is started every day at 3.00 o'clock ```se.travappar.api.dal.ExternalSourceCaller``` refresh all race events data. Every day at 4.00 o'clock ```se.travappar.api.dal.ExternalSourceCaller```refresh MailChimp segments and subscription data.
 
+## Super Admin
+- You need to put superadmin user to database by hands. 
+
+```INSERT INTO users(device_id, password, enabled, role, username)
+    VALUES ('admin', 'admin_password', true, 0, 'admin');```
+
 ## Basic workflow
 All incoming request go through ```SimpleCORSFilter``` and than (if URL mapping is OK and HTTP method allowed for this mapping) request will be handled by one of the ```Controller```. ```Controller``` works with database through ```DAO``` classes (data access object). ```Controller``` handle request,  save or get data from database with ```DAO``` class, and then return data in JSON or just HTTP status code with some message.
+
+## Future work
+- Refactor event fetching in ```EventController``` to async, because now it is not async. 
+- Refactor event fetching in ```EventController``` by mooving filtering by subscriptions from java to sql.
+- Refactor ```se.travappar.api.dal.ExternalSourceCaller```. Updating data from external sources is not optimized.
