@@ -40,10 +40,10 @@ Ubuntu 14.04 installation tutorial - https://www.digitalocean.com/community/tuto
    │   │                   ├───publish		- MailChimp and OneSignal helpers
    │   │                   │   ├───mailchimp
    │   │                   │   └───onesignal
-   │   │                   └───security		- classes for Spring Seciruty
+   │   │                   └───security		- classes for Spring Security
    │   ├───resources
    │   └───webapp
-   │       └───WEB-INF						- all configuratins and properties
+   │       └───WEB-INF						- all configurations and properties
    └───test
        └───se
            └───travappar
@@ -126,3 +126,6 @@ To stop Jetty use
 ```se.travappar.api.utils.publish.MailChimpHelper``` contains MailChimp iteraction logic.
 ```se.travappar.api.utils.publish.OneSignalHelper``` contains OneSignal iteraction logic.
 When app is started every day at 3.00 o'clock ```se.travappar.api.dal.ExternalSourceCaller``` refresh all race events data. Every day at 4.00 o'clock ```se.travappar.api.dal.ExternalSourceCaller```refresh MailChimp segments and subscription data.
+
+## Basic workflow
+All incoming request go through ```SimpleCORSFilter``` and than (if URL mapping is OK and HTTP method allowed for this mapping) request will be handled by one of the ```Controller```. ```Controller``` works with database through ```DAO``` classes (data access object). ```Controller``` handle request,  save or get data from database with ```DAO``` class, and then return data in JSON or just HTTP status code with some message.
